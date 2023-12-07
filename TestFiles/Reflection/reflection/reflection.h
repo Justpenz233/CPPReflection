@@ -10,14 +10,13 @@ namespace Piccolo
 {
 
 #if defined(__REFLECTION_PARSER__)
-#define META(...) __attribute__((annotate(#__VA_ARGS__)))
-#define CLASS(class_name, ...) class __attribute__((annotate(#__VA_ARGS__))) class_name
-#define STRUCT(struct_name, ...) struct __attribute__((annotate(#__VA_ARGS__))) struct_name
-//#define CLASS(class_name,...) class __attribute__((annotate(#__VA_ARGS__))) class_name:public Reflection::object
+#define MPROPERTY(...) __attribute__((annotate("MPROPERTY" #__VA_ARGS__)))
+#define MFUNCTION(...) __attribute__((annotate("MFUNCTION" #__VA_ARGS__)))
+#define CLASS(class_name, ...) class __attribute__((annotate("MCLASS" #__VA_ARGS__))) class_name
 #else
-#define META(...)
+#define MPROPERTY(...)
+#define MFUNCTION(...)
 #define CLASS(class_name, ...) class class_name
-#define STRUCT(struct_name, ...) struct struct_name
 //#define CLASS(class_name,...) class class_name:public Reflection::object
 #endif // __REFLECTION_PARSER__
 

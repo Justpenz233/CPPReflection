@@ -4,35 +4,44 @@
 
 namespace Piccolo
 {
+    REFLECTION_TYPE(Object)
+    CLASS(Object)
+    {
+    public:
+        MPROPERTY()
+        std::string ObjectName;
+    };
+    
+
     REFLECTION_TYPE(BaseTest)
-    CLASS(BaseTest, Fields)
+    CLASS(BaseTest : public Object)
     {
         REFLECTION_BODY(BaseTest);
 
     public:
-        META(Enable)
+        MPROPERTY()
         int               m_int;
-        META(Enable)
+        MPROPERTY()
         std::vector<int*> m_int_vector;
     };
 
     REFLECTION_TYPE(Test1)
-    CLASS(Test1 : public BaseTest, WhiteListFields)
+    CLASS(Test1 : public BaseTest)
     {
         REFLECTION_BODY(Test1);
 
     public:
-        META(Enable)
+        MPROPERTY()
         char m_char;
     };
 
     REFLECTION_TYPE(Test2)
-    CLASS(Test2 : public BaseTest, , Fields)
+    CLASS(Test2 : public BaseTest)
     {
         REFLECTION_BODY(Test2);
 
     public:
-        META(Enable)
+        MPROPERTY()
         std::vector<Reflection::ReflectionPtr<BaseTest>> m_test_base_array;
     };
 

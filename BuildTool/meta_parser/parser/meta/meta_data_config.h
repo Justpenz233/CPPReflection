@@ -2,15 +2,10 @@
 
 namespace NativeProperty
 {
-    const auto All = "All";
+    const auto MCLASS = "MCLASS";
 
-    const auto Fields = "Fields";
-    const auto Methods = "Methods";
+    const auto MPROPERTY = "MPROPERTY";
 
-    const auto Enable  = "Enable";
-    const auto Disable = "Disable";
-
-    const auto WhiteListFields = "WhiteListFields";
-    const auto WhiteListMethods = "WhiteListMethods";
+    const auto MFUNCTION = "MFUNCTION";
 
 } // namespace NativeProperty

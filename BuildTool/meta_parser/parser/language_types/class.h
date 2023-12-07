@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cursor/cursor.h"
 #include "type_info.h"
 
 #include "field.h"
@@ -22,10 +23,14 @@ class Class : public TypeInfo
 public:
     Class(const Cursor& cursor, const Namespace& current_namespace);
 
+    // Can obtain the classes inherit tree
+    static std::map<std::string, std::vector<std::string>> BaseClassMap;
+
     virtual bool shouldCompile(void) const;
 
     bool shouldCompileFields(void) const;
     bool shouldCompileMethods(void) const;
+    bool IsDerivedFrom(std::string BaseName) const;
 
     template<typename T>
     using SharedPtrVector = std::vector<std::shared_ptr<T>>;
