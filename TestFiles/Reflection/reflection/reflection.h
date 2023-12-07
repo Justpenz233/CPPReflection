@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Reflection/json.h"
+#include "Reflection/json.h"
 #include <functional>
 #include <string>
 #include <unordered_map>
