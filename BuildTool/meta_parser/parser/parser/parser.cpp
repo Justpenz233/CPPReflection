@@ -45,17 +45,19 @@ MetaParser::MetaParser(const std::string project_input_file,
                        const std::string include_path,
                        const std::string sys_include,
                        const std::string module_name,
+                       const std::string build_tool_dir,
+                       const std::string out_dir,
                        bool              is_show_errors) :
         m_project_input_file(project_input_file),
         m_source_include_file_name(include_file_path), m_index(nullptr), m_translation_unit(nullptr),
-        m_sys_include(sys_include), m_module_name(module_name), m_is_show_errors(is_show_errors)
+        m_sys_include(sys_include), m_module_name(module_name), m_is_show_errors(is_show_errors), m_build_tool_dir(build_tool_dir), m_out_dir(out_dir)
 {
     m_work_paths = Utils::split(include_path, ",");
     FileTimeDB = std::make_shared<FileTimestamp>(m_work_paths[0]);
     m_generators.emplace_back(new Generator::SerializerGenerator(
-            m_work_paths[0], std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
+            m_work_paths[0], out_dir, std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
     m_generators.emplace_back(new Generator::ReflectionGenerator(
-            m_work_paths[0], std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
+            m_work_paths[0], out_dir, std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
 }
 
 MetaParser::~MetaParser(void)

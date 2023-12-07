@@ -4,7 +4,7 @@
 void TemplateManager::loadTemplates(std::string path, std::string template_name)
 {
     std::filesystem::path BasePath(path);
-    BasePath = BasePath / ("../../BuildTool/meta_parser/template/" + template_name + ".mustache");
+    BasePath = BasePath / ("meta_parser/template/" + template_name + ".mustache");
     //TODO replace to passing in parameter
     std::string template_file = Utils::loadFile(BasePath.string());
 

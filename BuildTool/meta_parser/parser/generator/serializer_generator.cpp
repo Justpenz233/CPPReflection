@@ -5,8 +5,9 @@
 namespace Generator
 {
     SerializerGenerator::SerializerGenerator(std::string                             source_directory,
+                                             std::string out_dir,
                                              std::function<std::string(std::string)> get_include_function) :
-        GeneratorInterface(source_directory + "/_generated/serializer", source_directory, get_include_function)
+        GeneratorInterface(out_dir + "/_generated/serializer", source_directory, get_include_function)
     {
         prepareStatus(m_out_path);
     }

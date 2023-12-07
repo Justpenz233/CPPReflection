@@ -52,7 +52,7 @@ add_custom_target(${PRECOMPILE_TARGET} ALL
         ${CMAKE_COMMAND} -E echo "************************************************************* "
 
         COMMAND
-        ${PRECOMPILE_PARSER} "${PICCOLO_PRECOMPILE_PARAMS_PATH}" "${PARSER_INPUT}" ${INCLUDE_DIRS} ${sys_include} "MECHENGINE" 0
+        ${PRECOMPILE_PARSER} "${PICCOLO_PRECOMPILE_PARAMS_PATH}" "${PARSER_INPUT}" ${INCLUDE_DIRS} ${sys_include} "MECHENGINE" 0 ${BUILD_TOOL_DIR} ${GENERATED_DIR}
 
         COMMAND
         ${CMAKE_COMMAND} -E echo "************************************************************* "

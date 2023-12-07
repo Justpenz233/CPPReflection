@@ -23,6 +23,8 @@ public:
                const std::string include_path,
                const std::string include_sys,
                const std::string module_name,
+               const std::string build_tool_dir,
+               const std::string out_dir,
                bool              is_show_errors);
     ~MetaParser(void);
     void finish(void);
@@ -36,6 +38,9 @@ private:
     std::string              m_module_name;
     std::string              m_sys_include;
     std::string              m_source_include_file_name;
+    std::string              m_build_tool_dir;
+    std::string              m_out_dir;
+    
 
     CXIndex           m_index;
     CXTranslationUnit m_translation_unit;
