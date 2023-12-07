@@ -6,8 +6,9 @@ namespace Generator
 {
     SerializerGenerator::SerializerGenerator(std::string                             source_directory,
                                              std::string out_dir,
+                                             std::string build_tool_dir,
                                              std::function<std::string(std::string)> get_include_function) :
-        GeneratorInterface(out_dir + "/_generated/serializer", source_directory, get_include_function)
+        GeneratorInterface(out_dir + "/_generated/serializer", source_directory, build_tool_dir, get_include_function)
     {
         prepareStatus(m_out_path);
     }
@@ -15,9 +16,9 @@ namespace Generator
     void SerializerGenerator::prepareStatus(std::string path)
     {
         GeneratorInterface::prepareStatus(path);
-        TemplateManager::getInstance()->loadTemplates(m_root_path, "allSerializer.h");
-        TemplateManager::getInstance()->loadTemplates(m_root_path, "allSerializer.ipp");
-        TemplateManager::getInstance()->loadTemplates(m_root_path, "commonSerializerGenFile");
+        TemplateManager::getInstance()->loadTemplates(m_build_tool_dir, "allSerializer.h");
+        TemplateManager::getInstance()->loadTemplates(m_build_tool_dir, "allSerializer.ipp");
+        TemplateManager::getInstance()->loadTemplates(m_build_tool_dir, "commonSerializerGenFile");
         return;
     }
 

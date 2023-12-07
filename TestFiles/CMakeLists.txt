@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.16)
+set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_OSX_ARCHITECTURES "arm64" CACHE INTERNAL "" FORCE)
+
+project(TestLib)
+file(GLOB_RECURSE ENGINE_SOURCE_FILES *.cpp)
+file(GLOB_RECURSE ENGINE_HEADER_FILES *.h)
+
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${ENGINE_HEADER_FILES} ${ENGINE_SOURCE_FILES})
+
+add_library(TestLib SHARED ${ENGINE_SOURCE_FILES} ${ENGINE_HEADER_FILES})
+
+set_target_properties(TestLib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+if(APPLE)
+    target_compile_options(TestLib PUBLIC -Wno-c++20-extensions)
+endif()
+
+set_target_properties(TestLib PROPERTIES PARSE_HEADERS "${ENGINE_HEADER_FILES}")

@@ -1,14 +1,28 @@
 add_subdirectory(meta_parser)
 
-function(PreCompile project1 Header1)
-    set(BuildHeaders ${Header1})
-    get_target_property(INCLUDE_DIRS_1 ${project1} INCLUDE_DIRECTORIES)
+function(PreCompile Targets)
+    set(BuildHeaders)
+    set(INCLUDE_DIRS)
 
-    set(INCLUDE_DIRS "${ENGINE_SOURCE_DIR}")
-    string(JOIN ";" INCLUDE_DIRS "${INCLUDE_DIRS}" "${INCLUDE_DIRS_1}")
-    string(REPLACE ";" "," INCLUDE_DIRS "${INCLUDE_DIRS}")
+    foreach(Target ${Targets})
+        get_target_property(TargetHeader ${Target} PARSE_HEADERS)
+        list(APPEND BuildHeaders ${TargetHeader})
+
+        get_target_property(TargetIncludeDir ${Target} INCLUDE_DIRECTORIES)
+        get_target_property(TargetLocationDir ${Target} SOURCE_DIR)
+
+        if(TargetIncludeDir)
+            string(JOIN ";" INCLUDE_DIRS "${INCLUDE_DIRS}" "${TargetIncludeDir}")
+        endif()
+        string(JOIN ";" INCLUDE_DIRS "${INCLUDE_DIRS}" "${TargetLocationDir}")
+        string(REPLACE ";" "," INCLUDE_DIRS "${INCLUDE_DIRS}")
+    endforeach()   
 
     include(${BUILD_TOOL_DIR}/precompile/precompile.cmake)
+
     add_dependencies(PiccoloPreCompile PiccoloParser)
-    add_dependencies(${project1} PiccoloPreCompile)
+    foreach(Target ${Targets})
+        add_dependencies(${Target} PiccoloPreCompile)
+    endforeach()   
+
 endfunction()

@@ -55,9 +55,9 @@ MetaParser::MetaParser(const std::string project_input_file,
     m_work_paths = Utils::split(include_path, ",");
     FileTimeDB = std::make_shared<FileTimestamp>(m_work_paths[0]);
     m_generators.emplace_back(new Generator::SerializerGenerator(
-            m_work_paths[0], out_dir, std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
+            m_work_paths[0], out_dir, build_tool_dir, std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
     m_generators.emplace_back(new Generator::ReflectionGenerator(
-            m_work_paths[0], out_dir, std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
+            m_work_paths[0], out_dir, build_tool_dir, std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
 }
 
 MetaParser::~MetaParser(void)

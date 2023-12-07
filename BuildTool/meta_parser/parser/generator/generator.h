@@ -10,9 +10,10 @@ namespace Generator
     public:
         GeneratorInterface(std::string                             out_path,
                            std::string                             root_path,
+                           std::string                             build_tool_dir,
                            std::function<std::string(std::string)> get_include_func) :
             m_out_path(out_path),
-            m_root_path(root_path), m_get_include_func(get_include_func)
+            m_root_path(root_path), m_get_include_func(get_include_func), m_build_tool_dir(build_tool_dir)
         {}
         virtual int  generate(std::string path, SchemaMoudle schema) = 0;
         virtual void finish() {};
@@ -27,6 +28,7 @@ namespace Generator
 
         virtual std::string processFileName(std::string path) = 0;
 
+        std::string                             m_build_tool_dir;
         std::string                             m_out_path {"gen_src"};
         std::string                             m_root_path;
         std::function<std::string(std::string)> m_get_include_func;
