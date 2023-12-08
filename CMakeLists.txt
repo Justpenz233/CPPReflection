@@ -13,4 +13,6 @@ add_executable(EXAMPLE main.cpp)
 add_subdirectory(TestFiles)
 add_subdirectory(BuildTool)
 
-PreCompile(TestLib)
+PreCompile(TestLib EXAMPLE)
+
+target_link_libraries(EXAMPLE TestLib)

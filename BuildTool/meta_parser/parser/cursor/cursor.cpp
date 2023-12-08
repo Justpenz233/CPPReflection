@@ -43,6 +43,19 @@ std::string Cursor::getSourceFile(void) const
     return filename;
 }
 
+int Cursor::getSourceLine() const
+{
+    auto range = clang_Cursor_getSpellingNameRange(m_handle, 0, 0);
+
+    auto start = clang_getRangeStart(range);
+
+    CXFile   file;
+    unsigned line, column, offset;
+
+    clang_getFileLocation(start, &file, &line, &column, &offset);
+    return line;
+}
+
 bool Cursor::isDefinition(void) const { return clang_isCursorDefinition(m_handle); }
 
 CursorType Cursor::getType(void) const { return clang_getCursorType(m_handle); }

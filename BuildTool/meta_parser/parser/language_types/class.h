@@ -1,5 +1,6 @@
 #pragma once
 
+#include "class_tag.h"
 #include "cursor/cursor.h"
 #include "type_info.h"
 
@@ -31,6 +32,7 @@ public:
     bool shouldCompileFields(void) const;
     bool shouldCompileMethods(void) const;
     bool IsDerivedFrom(std::string BaseName) const;
+    void TrySetClassTag(class_tag&& InTag);
 
     template<typename T>
     using SharedPtrVector = std::vector<std::shared_ptr<T>>;
@@ -47,7 +49,11 @@ public:
     SharedPtrVector<Field> m_fields;
     SharedPtrVector<Method> m_methods;
 
+    class_tag Tag;
+
     std::string m_display_name;
 
     bool isAccessible(void) const;
+
+
 };

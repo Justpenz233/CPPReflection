@@ -17,6 +17,7 @@ public:
     std::string getDisplayName(void) const;
 
     std::string getSourceFile(void) const;
+    int getSourceLine(void) const;
 
     bool isDefinition(void) const;
 

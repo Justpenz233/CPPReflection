@@ -25,7 +25,7 @@ namespace Piccolo
     friend class Serializer;
     // public: virtual std::string getTypeName() override {return #class_name;}
 
-#define REFLECTION_TYPE(class_name) \
+#define REFLECTION_TYPE(class_name, ...) \
     namespace Reflection \
     { \
         namespace TypeFieldReflectionOparator \
@@ -33,6 +33,16 @@ namespace Piccolo
             class Type##class_name##Operator; \
         } \
     };
+
+#define MCLASS(class_name, ...) \
+    namespace Reflection \
+    { \
+        namespace TypeFieldReflectionOparator \
+        { \
+            class Type##class_name##Operator; \
+        } \
+    }; \
+    int MCLASS_##class_name=0;
 
 #define REGISTER_FIELD_TO_MAP(name, value) TypeMetaRegisterinterface::registerToFieldMap(name, value);
 #define REGISTER_Method_TO_MAP(name, value) TypeMetaRegisterinterface::registerToMethodMap(name, value);

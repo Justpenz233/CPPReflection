@@ -8,6 +8,10 @@
 
 #include "parser.h"
 
+#include <utility>
+
+#include "language_types/class_tag.h"
+
 #define RECURSE_NAMESPACES(kind, cursor, method, namespaces) \
     { \
         if (kind == CXCursor_Namespace) \
@@ -243,13 +247,19 @@ void MetaParser::generateFiles(void)
 
 void MetaParser::buildClassAST(const Cursor& cursor, Namespace& current_namespace)
 {
+    static class_tag LastTagVar;
     for (auto& child : cursor.getChildren())
     {
         auto kind = child.getKind();
         // actual definition and a class or struct
+        if(child.isDefinition() && kind == CXCursor_VarDecl)
+        {
+            LastTagVar = class_tag(child);
+        }
         if (child.isDefinition() && (kind == CXCursor_ClassDecl || kind == CXCursor_StructDecl))
         {
             auto class_ptr = std::make_shared<Class>(child, current_namespace);
+            class_ptr->TrySetClassTag(std::move(LastTagVar));
             TRY_ADD_LANGUAGE_TYPE(class_ptr, classes);
         }
         else

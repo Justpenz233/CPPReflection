@@ -16,6 +16,8 @@ public:
 
     std::string getSourceFile(void) const;
 
+    int getSourceLine() const;
+
     Namespace getCurrentNamespace() const;
 
     Cursor& getCurosr();

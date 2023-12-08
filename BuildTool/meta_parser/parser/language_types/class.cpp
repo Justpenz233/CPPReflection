@@ -55,12 +55,23 @@ bool Class::IsDerivedFrom(std::string BaseName) const
     return ContainBase(m_name, BaseName);
 }
 
+void Class::TrySetClassTag(class_tag&& InTag)
+{
+    if (!InTag.Valid) return;
+    if (m_name != InTag.GetClassName()) return;
+    if (InTag.SourceFile != getSourceFile()) return;
+    if (InTag.SourceLine > getSourceLine()) return;
+    Tag = InTag;
+}
+
 // With MCLASS tag and derive from Object
 bool Class::shouldCompile(void) const 
 { 
     if(m_name == "Object") return true;
-    if(!m_meta_data.getFlag(NativeProperty::MCLASS)) return false;
-    return IsDerivedFrom("Object");
+    if(!IsDerivedFrom("Object")) return false;
+    if(m_meta_data.getFlag(NativeProperty::MCLASS)) return true;
+    if(Tag.getFlag(NativeProperty::MCLASS)) return true;
+    return false;
 }
 
 bool Class::shouldCompileFields(void) const

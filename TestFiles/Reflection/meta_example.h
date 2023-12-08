@@ -4,17 +4,18 @@
 
 namespace Piccolo
 {
-    REFLECTION_TYPE(Object)
-    CLASS(Object)
+    MCLASS(Object)
+    class Object
     {
     public:
         MPROPERTY()
         std::string ObjectName;
     };
     
+    inline int R_TAG_BaseTest_MCLASS_1;
 
-    REFLECTION_TYPE(BaseTest)
-    CLASS(BaseTest : public Object)
+    MCLASS(BaseTest)
+    class BaseTest : public Object
     {
         REFLECTION_BODY(BaseTest);
 
@@ -25,8 +26,8 @@ namespace Piccolo
         std::vector<int*> m_int_vector;
     };
 
-    REFLECTION_TYPE(Test1)
-    CLASS(Test1 : public BaseTest)
+    MCLASS(Test1)
+    class Test1 : public BaseTest
     {
         REFLECTION_BODY(Test1);
 
@@ -35,8 +36,8 @@ namespace Piccolo
         char m_char;
     };
 
-    REFLECTION_TYPE(Test2)
-    CLASS(Test2 : public BaseTest)
+    MCLASS(Test2)
+    class Test2 : public BaseTest
     {
         REFLECTION_BODY(Test2);
 
