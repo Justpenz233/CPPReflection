@@ -12,18 +12,21 @@ namespace Piccolo
 #if defined(__REFLECTION_PARSER__)
 #define MPROPERTY(...) __attribute__((annotate("MPROPERTY" #__VA_ARGS__)))
 #define MFUNCTION(...) __attribute__((annotate("MFUNCTION" #__VA_ARGS__)))
-#define CLASS(class_name, ...) class __attribute__((annotate("MCLASS" #__VA_ARGS__))) class_name
 #else
 #define MPROPERTY(...)
 #define MFUNCTION(...)
-#define CLASS(class_name, ...) class class_name
-//#define CLASS(class_name,...) class class_name:public Reflection::object
 #endif // __REFLECTION_PARSER__
+
+#define REFLECTION_BODY_OBJECT(class_name) \
+    friend class Reflection::TypeFieldReflectionOparator::Type##class_name##Operator; \
+    friend class Serializer; \
+    public: virtual std::string GetClassName() const { return #class_name; }
+
 
 #define REFLECTION_BODY(class_name) \
     friend class Reflection::TypeFieldReflectionOparator::Type##class_name##Operator; \
-    friend class Serializer;
-    // public: virtual std::string getTypeName() override {return #class_name;}
+    friend class Serializer; \
+    public: virtual std::string GetClassName() const override { return #class_name; }
 
 #define REFLECTION_TYPE(class_name, ...) \
     namespace Reflection \
@@ -42,7 +45,7 @@ namespace Piccolo
             class Type##class_name##Operator; \
         } \
     }; \
-    int MCLASS_##class_name=0;
+    inline int MCLASS_##class_name=0;
 
 #define REGISTER_FIELD_TO_MAP(name, value) TypeMetaRegisterinterface::registerToFieldMap(name, value);
 #define REGISTER_Method_TO_MAP(name, value) TypeMetaRegisterinterface::registerToMethodMap(name, value);

@@ -7,12 +7,12 @@ namespace Piccolo
     MCLASS(Object)
     class Object
     {
+        REFLECTION_BODY_OBJECT(Object);
+
     public:
         MPROPERTY()
         std::string ObjectName;
     };
-    
-    inline int R_TAG_BaseTest_MCLASS_1;
 
     MCLASS(BaseTest)
     class BaseTest : public Object
@@ -24,6 +24,8 @@ namespace Piccolo
         int               m_int;
         MPROPERTY()
         std::vector<int*> m_int_vector;
+        MFUNCTION()
+        void test();
     };
 
     MCLASS(Test1)

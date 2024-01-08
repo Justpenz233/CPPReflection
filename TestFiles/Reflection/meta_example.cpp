@@ -5,6 +5,11 @@
 #include <iostream>
 namespace Piccolo
 {
+
+    void BaseTest::test()
+    {
+    }
+
     void metaExample()
     {
         Test1 test1_in;
