@@ -11,7 +11,8 @@ namespace Piccolo
         return GetMetaInfo(GetClassName(), this);
     }
 
-    Piccolo::Reflection::ReflectionInstance Object::GetMetaInfo(Class ClassName, void* Instance)
+
+    Piccolo::Reflection::ReflectionInstance Object::GetMetaInfo(const Class& ClassName, void* Instance)
     {
         return Piccolo::Reflection::ReflectionInstance(
             Piccolo::Reflection::TypeMeta::newMetaFromName(ClassName), Instance);
@@ -48,6 +49,26 @@ namespace Piccolo
         auto Ret = RecursiveBase(GetClassName());
         return {Ret.begin(), Ret.end()};
 
+    }
+
+    std::vector<Reflection::FieldAccessor> Object::GetAllPropertyAceessors(EAccessorFlag Flag)
+    {
+        std::function<void(Class CurrentClass)> RecursiveBase;
+        std::vector<Reflection::FieldAccessor> ret;
+
+        // Get this propery
+        auto ThisMeta = Object::GetMetaInfo(GetClassName(), this);
+        auto ThisProperty = ThisMeta.m_meta.getFieldsList();
+        ret.insert(ret.end(), ThisProperty.begin(), ThisProperty.end());
+
+        if (Flag != ExculdeParent) {
+            for(auto ParaentClass : GetBaseClassRecursive()) {
+                auto Meta = Object::GetMetaInfo(ParaentClass, this);
+                auto Property = Meta.m_meta.getFieldsList();
+                ret.insert(ret.end(), Property.begin(), Property.end());
+            }
+        }
+        return ret;
     }
 
     void BaseTest::test()
@@ -97,9 +118,8 @@ namespace Piccolo
 
         // reflection
         auto                       meta = TypeMetaDef(Test2, &test2_out);
-        Reflection::FieldAccessor* fields;
-        int                        fields_count = meta.m_meta.getFieldsList(fields);
-        for (int i = 0; i < fields_count; ++i)
+        auto fields = meta.m_meta.getFieldsList();
+        for (int i = 0; i < fields.size(); ++i)
         {
             auto filed_accesser = fields[i];
             std::cout << filed_accesser.getFieldTypeName() << " " << filed_accesser.getFieldName() << " "

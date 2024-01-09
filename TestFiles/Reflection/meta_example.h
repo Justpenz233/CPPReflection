@@ -4,6 +4,16 @@
 
 namespace Piccolo
 {
+
+    enum EAccessorFlag
+    {
+        // Include all propertys recursively from parent class
+        Default,
+
+        // Exclude all property from parent class
+        ExculdeParent
+    };
+
     MCLASS(Object)
     class Object
     {
@@ -16,11 +26,15 @@ namespace Piccolo
 
         // Get immediate parent class
         std::vector<Class> GetBaseClassDirect();
+
+        // Get all parent classes recursively
         std::vector<Class> GetBaseClassRecursive();
 
+        std::vector<Reflection::FieldAccessor> GetAllPropertyAceessors(EAccessorFlag Flag = EAccessorFlag::Default);
 
         Piccolo::Reflection::ReflectionInstance GetMetaInfo();
-        static Piccolo::Reflection::ReflectionInstance GetMetaInfo(Class ClassName, void* Instance);
+
+        static Piccolo::Reflection::ReflectionInstance GetMetaInfo(const Class& ClassName, void* Instance);
     };
 
     MCLASS(BaseTest)

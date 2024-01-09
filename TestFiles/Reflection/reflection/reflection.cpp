@@ -138,15 +138,9 @@ namespace Piccolo
 
         std::string TypeMeta::getTypeName() { return m_type_name; }
 
-        int TypeMeta::getFieldsList(FieldAccessor*& out_list)
+        std::vector<FieldAccessor> TypeMeta::getFieldsList()
         {
-            int count = m_fields.size();
-            out_list  = new FieldAccessor[count];
-            for (int i = 0; i < count; ++i)
-            {
-                out_list[i] = m_fields[i];
-            }
-            return count;
+            return m_fields;
         }
 
         int TypeMeta::getMethodsList(MethodAccessor*& out_list)

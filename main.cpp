@@ -26,4 +26,9 @@ int main()
     }
     std::cout << "--------------------" << std::endl;
 
+    std::cout << "All Property : " << std::endl;
+    for (auto i : t->GetAllPropertyAceessors()) {
+        std::cout << i.getFieldName() << " : " << i.getFieldTypeName() << " in Class : " << std::endl;
+    }
+
 }

@@ -138,7 +138,7 @@ namespace Piccolo
 
             std::string getTypeName();
 
-            int getFieldsList(FieldAccessor*& out_list);
+            std::vector<FieldAccessor> getFieldsList();
             int getMethodsList(MethodAccessor*& out_list);
 
             int getBaseClassReflectionInstanceList(ReflectionInstance*& out_list, void* instance);
