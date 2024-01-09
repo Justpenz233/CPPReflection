@@ -10,8 +10,17 @@ namespace Piccolo
         REFLECTION_BODY_OBJECT(Object);
 
     public:
+        typedef std::string Class;
         MPROPERTY()
         std::string ObjectName;
+
+        // Get immediate parent class
+        std::vector<Class> GetBaseClassDirect();
+        std::vector<Class> GetBaseClassRecursive();
+
+
+        Piccolo::Reflection::ReflectionInstance GetMetaInfo();
+        static Piccolo::Reflection::ReflectionInstance GetMetaInfo(Class ClassName, void* Instance);
     };
 
     MCLASS(BaseTest)
@@ -42,7 +51,9 @@ namespace Piccolo
     class Test2 : public BaseTest
     {
         REFLECTION_BODY(Test2);
-
+    private:
+        MPROPERTY()
+        int Private_test = 10;
     public:
         MPROPERTY()
         std::vector<Reflection::ReflectionPtr<BaseTest>> m_test_base_array;

@@ -213,21 +213,21 @@ namespace Piccolo
         FieldAccessor::FieldAccessor()
         {
             m_field_type_name = k_unknown_type;
-            m_field_name      = k_unknown;
+            class_name      = k_unknown;
             m_functions       = nullptr;
         }
 
         FieldAccessor::FieldAccessor(FieldFunctionTuple* functions) : m_functions(functions)
         {
             m_field_type_name = k_unknown_type;
-            m_field_name      = k_unknown;
+            class_name      = k_unknown;
             if (m_functions == nullptr)
             {
                 return;
             }
 
             m_field_type_name = (std::get<4>(*m_functions))();
-            m_field_name      = (std::get<3>(*m_functions))();
+            class_name      = (std::get<3>(*m_functions))();
         }
 
         void* FieldAccessor::get(void* instance)
@@ -256,7 +256,7 @@ namespace Piccolo
             return f_type.m_is_valid;
         }
 
-        const char* FieldAccessor::getFieldName() const { return m_field_name; }
+        const char* FieldAccessor::getFieldName() const { return class_name; }
         const char* FieldAccessor::getFieldTypeName() { return m_field_type_name; }
 
         bool FieldAccessor::isArrayType()
@@ -272,7 +272,7 @@ namespace Piccolo
                 return *this;
             }
             m_functions       = dest.m_functions;
-            m_field_name      = dest.m_field_name;
+            class_name      = dest.class_name;
             m_field_type_name = dest.m_field_type_name;
             return *this;
         }

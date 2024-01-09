@@ -65,11 +65,11 @@ namespace Piccolo
 
 #define TypeMetaDef(class_name, ptr) \
     Piccolo::Reflection::ReflectionInstance(Piccolo::Reflection::TypeMeta::newMetaFromName(#class_name), \
-                                            (class_name*)ptr)
+                                            ptr)
 
 #define TypeMetaDefPtr(class_name, ptr) \
     new Piccolo::Reflection::ReflectionInstance(Piccolo::Reflection::TypeMeta::newMetaFromName(#class_name), \
-                                                (class_name*)ptr)
+                                                ptr)
 
     template<typename T, typename U, typename = void>
     struct is_safely_castable : std::false_type
@@ -193,7 +193,7 @@ namespace Piccolo
 
         private:
             FieldFunctionTuple* m_functions;
-            const char*         m_field_name;
+            const char*         class_name;
             const char*         m_field_type_name;
         };
         class MethodAccessor

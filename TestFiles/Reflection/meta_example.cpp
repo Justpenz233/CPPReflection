@@ -2,12 +2,57 @@
 #include "_generated/serializer/all_serializer.h"
 #include <filesystem>
 #include <fstream>
+#include <set>
 #include <iostream>
 namespace Piccolo
 {
+    Piccolo::Reflection::ReflectionInstance Object::GetMetaInfo()
+    {
+        return GetMetaInfo(GetClassName(), this);
+    }
+
+    Piccolo::Reflection::ReflectionInstance Object::GetMetaInfo(Class ClassName, void* Instance)
+    {
+        return Piccolo::Reflection::ReflectionInstance(
+            Piccolo::Reflection::TypeMeta::newMetaFromName(ClassName), Instance);
+    }
+
+    std::vector<Object::Class> Object::GetBaseClassDirect()
+    {
+        auto meta = GetMetaInfo();
+        Reflection::ReflectionInstance* list;
+        int Count = meta.m_meta.getBaseClassReflectionInstanceList(list, this);
+        std::vector<Object::Class>  ret;
+        for(int i = 0;i < Count;i ++) {
+            ret.emplace_back(list[i].m_meta.getTypeName());
+        }
+        return ret;
+    }
+
+    std::vector<Object::Class> Object::GetBaseClassRecursive()
+    {
+        std::function<std::set<std::string>(Class CurrentClass)> RecursiveBase;
+        RecursiveBase = [this, &RecursiveBase] (Object::Class CurrentClass)
+        {
+            std::set<std::string> ret;
+            auto meta = Object::GetMetaInfo(CurrentClass, this);
+            Reflection::ReflectionInstance* list;
+            int Count = meta.m_meta.getBaseClassReflectionInstanceList(list, this);
+            for(int i = 0;i < Count;i ++) {
+                ret.insert(list[i].m_meta.getTypeName());
+                auto temp = RecursiveBase(list[i].m_meta.getTypeName());
+                ret.insert(temp.begin(), temp.end());
+            }
+            return ret;
+        };
+        auto Ret = RecursiveBase(GetClassName());
+        return {Ret.begin(), Ret.end()};
+
+    }
 
     void BaseTest::test()
     {
+
     }
 
     void metaExample()
