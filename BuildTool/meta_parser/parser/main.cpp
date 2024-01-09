@@ -30,10 +30,17 @@ int main(int argc, char* argv[])
     {
         std::cerr << "Arguments parse error!" << std::endl
                   << "Please call the tool like this:" << std::endl
-                  << "meta_parser  project_file_name  include_file_name_to_generate  project_base_directory "
-                     "sys_include_directory module_name showErrors(0 or 1)"
+                  << "parser_binary_path to_compile_json_path  all_file_header_path  target_include_path "
+                     "sys_include_directory module_name showErrors(0 or 1) build_tool_dir out_dir"
                   << std::endl
-                  << std::endl;
+                  << std::endl
+        << "Expected 9 arguments, but got " << argc << " arguments." << std::endl;
+
+        for (int i = 0; i < argc;++i)
+        {
+            std::cerr << "argv[" << i << "] = " << argv[i] << std::endl;
+        }
+
         return -1;
     }
 

@@ -1,8 +1,12 @@
+set(BUILD_TOOL_DIR "${CMAKE_CURRENT_SOURCE_DIR}" CACHE STRING "BUILD TOOL DIR")
 add_subdirectory(meta_parser)
 
-function(PreCompile Targets)
+## Precompile and generate header files
+## should set path where header should place and target lists
+function(PreCompile GeneratedPath Targets)
     set(BuildHeaders)
     set(INCLUDE_DIRS)
+    set(GENERATED_DIR ${GeneratedPath})
 
     foreach(Target ${Targets})
         get_target_property(TargetHeader ${Target} PARSE_HEADERS)

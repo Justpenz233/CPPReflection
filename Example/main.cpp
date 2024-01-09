@@ -1,13 +1,10 @@
 #include <iostream>
 #include "Reflection/meta_example.h"
 #include "Reflection/reflection/reflection_register.h"
-#include "_generated/reflection/all_reflection.h"
-
 
 int main()
 {
-    Piccolo::metaExample(); // Register meta info
-
+    //IMPORTANT Call this method to register meta info in global scope
     Piccolo::Reflection::TypeMetaRegister::metaRegister();
     std::shared_ptr<Piccolo::Test2> b = std::make_shared<Piccolo::Test2>();
     std::shared_ptr<Piccolo::Object> t = b;

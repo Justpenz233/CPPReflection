@@ -45,19 +45,11 @@ add_custom_target(${PRECOMPILE_TARGET} ALL
 
 # If more than one COMMAND is specified they will be executed in order...
         COMMAND
-        ${CMAKE_COMMAND} -E echo "************************************************************* "
-        COMMAND
-        ${CMAKE_COMMAND} -E echo "                     [Precompile] BEGIN "
-        COMMAND
-        ${CMAKE_COMMAND} -E echo "************************************************************* "
+        ${CMAKE_COMMAND} -E echo "[Precompile] BEGIN "
 
         COMMAND
         ${PRECOMPILE_PARSER} "${PICCOLO_PRECOMPILE_PARAMS_PATH}" "${PARSER_INPUT}" ${INCLUDE_DIRS} ${sys_include} "MECHENGINE" 0 ${BUILD_TOOL_DIR} ${GENERATED_DIR}
 
         COMMAND
-        ${CMAKE_COMMAND} -E echo "************************************************************* "
-        COMMAND
-        ${CMAKE_COMMAND} -E echo "                     [Precompile] END "
-        COMMAND
-        ${CMAKE_COMMAND} -E echo "************************************************************* "
+        ${CMAKE_COMMAND} -E echo "[Precompile] END "
 )
