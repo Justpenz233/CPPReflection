@@ -3,9 +3,9 @@
 #include "{{headfile_name}}"
 {{/include_headfiles}}
 
-namespace Piccolo{
-    {{#class_defines}}class {{class_name}};
-    {{/class_defines}}
+
+{{#class_defines}}class {{class_name}};
+{{/class_defines}}
 namespace Reflection{
 {{#class_defines}}namespace TypeFieldReflectionOparator{
     class Type{{class_name}}Operator{
@@ -109,6 +109,4 @@ namespace TypeWrappersRegister{
     {{/class_defines}}
     }
 }//namespace TypeWrappersRegister
-
 }//namespace Reflection
-}//namespace Piccolo

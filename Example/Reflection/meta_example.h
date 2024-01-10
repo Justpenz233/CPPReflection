@@ -2,9 +2,6 @@
 #include <vector>
 #include "Reflection/reflection/reflection.h"
 
-namespace Piccolo
-{
-
     enum EAccessorFlag
     {
         // Include all propertys recursively from parent class
@@ -18,11 +15,11 @@ namespace Piccolo
     class Object
     {
         REFLECTION_BODY_OBJECT(Object);
-
-    public:
-        typedef std::string Class;
+    protected:
         MPROPERTY()
         std::string ObjectName;
+    public:
+        typedef std::string Class;
 
         // Get immediate parent class
         std::vector<Class> GetBaseClassDirect();
@@ -32,9 +29,9 @@ namespace Piccolo
 
         std::vector<Reflection::FieldAccessor> GetAllPropertyAceessors(EAccessorFlag Flag = EAccessorFlag::Default);
 
-        Piccolo::Reflection::ReflectionInstance GetMetaInfo();
+        Reflection::ReflectionInstance GetMetaInfo();
 
-        static Piccolo::Reflection::ReflectionInstance GetMetaInfo(const Class& ClassName, void* Instance);
+        static Reflection::ReflectionInstance GetMetaInfo(const Class& ClassName, void* Instance);
     };
 
     MCLASS(BaseTest)
@@ -74,4 +71,3 @@ namespace Piccolo
     };
 
     void metaExample();
-} // namespace Piccolo

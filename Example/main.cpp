@@ -5,9 +5,9 @@
 int main()
 {
     //IMPORTANT Call this method to register meta info in global scope
-    Piccolo::Reflection::TypeMetaRegister::metaRegister();
-    std::shared_ptr<Piccolo::Test2> b = std::make_shared<Piccolo::Test2>();
-    std::shared_ptr<Piccolo::Object> t = b;
+    Reflection::TypeMetaRegister::metaRegister();
+    std::shared_ptr<Test2> b = std::make_shared<Test2>();
+    std::shared_ptr<Object> t = b;
     std::cout << "Class Name : ";
     std::cout << t->GetClassName() << std::endl;
 
