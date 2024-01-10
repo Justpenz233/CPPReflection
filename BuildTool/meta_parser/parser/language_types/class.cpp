@@ -21,9 +21,13 @@ Class::Class(const Cursor& cursor, const Namespace& current_namespace) :
         {
             case CXCursor_CXXBaseSpecifier: {
                 auto base_class = new BaseClass(child);
-
                 m_base_classes.emplace_back(base_class);
                 BaseNames.emplace_back(base_class->name);
+                // For Object, we ignore all base class, for user may inherit from shared_from this
+                if(m_name == "Object") {
+                    m_base_classes.clear();
+                    BaseNames.clear();
+                }
             }
             break;
             // field

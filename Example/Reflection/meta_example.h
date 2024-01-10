@@ -12,7 +12,7 @@
     };
 
     MCLASS(Object)
-    class Object
+    class Object : public std::enable_shared_from_this<Object>
     {
         REFLECTION_BODY_OBJECT(Object);
     protected:
