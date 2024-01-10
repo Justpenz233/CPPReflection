@@ -18,13 +18,17 @@ add_library(TestLib SHARED ${ENGINE_SOURCE_FILES} ${ENGINE_HEADER_FILES})
 target_include_directories(TestLib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties(TestLib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+# --------- Reflection setup ------------
+
 # IMPORTANT: Set PARSE_HEADERS property to precompiler to read
 set_target_properties(TestLib PROPERTIES PARSE_HEADERS "${ENGINE_HEADER_FILES}")
-
-# create executable
-add_executable(TestExe main.cpp)
-target_link_libraries(TestExe PUBLIC TestLib)
 
 # Add library to precompile
 # IMPORTANT: Set GeneratedPath to this dir
 PreCompile("${CMAKE_CURRENT_SOURCE_DIR}" TestLib)
+
+# ---------------------------------------
+
+# create executable
+add_executable(TestExe main.cpp)
+target_link_libraries(TestExe PUBLIC TestLib)
