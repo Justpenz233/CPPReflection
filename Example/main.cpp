@@ -27,5 +27,12 @@ int main()
     for (auto i : t->GetAllPropertyAceessors()) {
         std::cout << i.getFieldName() << " : " << i.getFieldTypeName() << " in Class : " << std::endl;
     }
+    std::cout << "--------------------" << std::endl;
 
+    std::cout << "All Method : " << std::endl;
+    for (auto i : t->GetAllMethodAceessors()) {
+        std::cout << i.getMethodName() << std::endl;
+    }
+    t->InvokeFunction("test_void", std::string("HelloWorld!"));
+    std::cout << t->InvokeFunction<int>("test_ret", 10, 8); // 18
 }

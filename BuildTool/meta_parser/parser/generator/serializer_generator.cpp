@@ -39,6 +39,9 @@ namespace Generator
             Mustache::data("headfile_name", Utils::makeRelativePath(m_root_path, path).string()));
         for (auto class_temp : schema.classes)
         {
+            if(!class_temp->shouldCompile())
+                continue;
+            
             if (!class_temp->shouldCompileFields())
                 continue;
 

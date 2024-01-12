@@ -46,8 +46,9 @@ class BaseTest : public Object
 If you are familiar with Unreal Engine, you will find that the usage of this lib is very similar to Unreal Engine's reflection system. You can use MCLASS, MPROPERTY, MFUNCTION to declare a class, property, function. And you can use REFLECTION_BODY to implement the reflection system.
 
 NOTE:
-> All refelction class should inherit from class named Object. \
-> We would use a common base class as the pointer type.
+> * All refelction class should inherit from class named Object. 
+> * We would use this common base class as the pointer type. 
+> * All reflection class should contain at least one MPROPERTY 
 
 ## How did it work
 

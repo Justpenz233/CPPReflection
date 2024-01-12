@@ -70,9 +70,24 @@ std::vector<Reflection::FieldAccessor> Object::GetAllPropertyAceessors(EAccessor
     return ret;
 }
 
-void BaseTest::test()
+std::vector<Reflection::MethodAccessor> Object::GetAllMethodAceessors(EAccessorFlag Flag)
 {
+    std::function<void(Class CurrentClass)> RecursiveBase;
+    std::vector<Reflection::MethodAccessor> ret;
 
+    // Get this propery
+    auto ThisMeta = Object::GetMetaInfo(GetClassName(), this);
+    auto ThisMethod = ThisMeta.m_meta.getMethodsList();
+    ret.insert(ret.end(), ThisMethod.begin(), ThisMethod.end());
+
+    if (Flag != ExculdeParent) {
+        for(auto ParaentClass : GetBaseClassRecursive()) {
+            auto Meta = Object::GetMetaInfo(ParaentClass, this);
+            auto Property = Meta.m_meta.getMethodsList();
+            ret.insert(ret.end(), Property.begin(), Property.end());
+        }
+    }
+    return ret;
 }
 
 void metaExample()

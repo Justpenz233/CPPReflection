@@ -1,4 +1,6 @@
 #pragma once
+#include <any>
+
 #include "Reflection/json.h"
 #include <functional>
 #include <string>
@@ -94,7 +96,7 @@ typedef std::function<void(int, void*, void*)> SetArrayFunc;
 typedef std::function<void*(int, void*)> GetArrayFunc;
 typedef std::function<int(void*)> GetSizeFunc;
 typedef std::function<bool()> GetBoolFunc;
-typedef std::function<void(void*)> InvokeFunction;
+typedef std::function<std::any(void *, std::any)> InvokeFunction;
 
 typedef std::function<void*(const Json&)> ConstructorWithJson;
 typedef std::function<Json(void*)> WriteJsonByName;
@@ -145,13 +147,13 @@ namespace Reflection
 
         std::vector<FieldAccessor> getFieldsList();
 
-        int getMethodsList(MethodAccessor*& out_list);
+        std::vector<MethodAccessor> getMethodsList();
 
         int getBaseClassReflectionInstanceList(ReflectionInstance*& out_list, void* instance);
 
-        FieldAccessor getFieldByName(const char* name);
+        FieldAccessor getFieldByName(const std::string& name);
 
-        MethodAccessor getMethodByName(const char* name);
+        MethodAccessor getMethodByName(const std::string& name);
 
         bool isValid() { return m_is_valid; }
 
@@ -215,7 +217,12 @@ namespace Reflection
     public:
         MethodAccessor();
 
-        void invoke(void* instance);
+        template<typename... Args>
+        std::any Invoke(void* instance, Args&& ...args)
+        {
+            auto P = std::make_tuple(args...);
+            return std::get<1>(*m_functions)(instance, &P);
+        }
 
         const char* getMethodName() const;
 

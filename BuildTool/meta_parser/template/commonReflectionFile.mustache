@@ -3,6 +3,44 @@
 #include "{{headfile_name}}"
 {{/include_headfiles}}
 
+namespace Reflection{
+namespace TypeFieldReflectionOparator{
+    template<typename T>
+    struct function_traits : function_traits<decltype(&T::operator())> {};
+
+    template<typename R, typename... Args>
+    struct function_traits<R(*)(Args...)> {
+        using args_tuple = std::tuple<Args...>;
+        using return_type = R;
+    };
+
+    template<typename C, typename R, typename... Args>
+    struct function_traits<R(C::*)(Args...)> {
+        using args_tuple = std::tuple<Args...>;
+        using return_type = R;
+    };
+
+    template<typename C, typename R, typename... Args>
+    struct function_traits<R(C::*)(Args...) const> {
+        using args_tuple = std::tuple<Args...>;
+        using return_type = R;
+    };
+
+
+    template<typename Func,class ClassType, typename TupleType>
+    static std::any InvokeFun(Func&& func, void * instance, const std::any& Parameter, std::true_type)
+    {
+         std::apply(std::forward<Func>(func), std::tuple_cat(std::make_tuple(static_cast<ClassType*>(instance)), *std::any_cast<TupleType *>(Parameter)));
+         return {};
+    }
+
+    template<typename Func,class ClassType, typename TupleType>
+    static std::any InvokeFun(Func&& func, void * instance, const std::any& Parameter, std::false_type)
+    {
+         return std::apply(std::forward<Func>(func), std::tuple_cat(std::make_tuple(static_cast<ClassType*>(instance)), *std::any_cast<TupleType *>(Parameter)));
+    }
+}}
+
 
 {{#class_defines}}class {{class_name}};
 {{/class_defines}}
@@ -41,7 +79,14 @@ namespace Reflection{
         // methods
         {{#class_method_defines}}
         static const char* getMethodName_{{class_method_name}}(){ return "{{class_method_name}}";}
-        static void invoke_{{class_method_name}}(void * instance){static_cast<{{class_name}}*>(instance)->{{class_method_name}}();}
+        static std::any invoke_{{class_method_name}}(void * instance, std::any Parameter)
+        {
+            using tuple_type = function_traits<decltype(&{{class_name}}::{{class_method_name}})>::args_tuple;
+            using return_type = function_traits<decltype(&{{class_name}}::{{class_method_name}})>::return_type;
+            assert(Parameter.type() == typeid(tuple_type*)); // Wrong parameter type, please check your definition.
+            return InvokeFun<decltype(&{{class_name}}::{{class_method_name}}), {{class_name}}, tuple_type>
+            (&{{class_name}}::{{class_method_name}}, instance, Parameter, std::is_same<return_type, void>());
+        }
         {{/class_method_defines}}
     };
 }//namespace TypeFieldReflectionOparator

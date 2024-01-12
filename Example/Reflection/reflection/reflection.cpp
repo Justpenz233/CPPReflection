@@ -141,15 +141,9 @@ namespace Reflection
         return m_fields;
     }
 
-    int TypeMeta::getMethodsList(MethodAccessor*& out_list)
+    std::vector<MethodAccessor> TypeMeta::getMethodsList()
     {
-        int count = m_methods.size();
-        out_list  = new MethodAccessor[count];
-        for (int i = 0; i < count; ++i)
-        {
-            out_list[i] = m_methods[i];
-        }
-        return count;
+        return m_methods;
     }
 
     int TypeMeta::getBaseClassReflectionInstanceList(ReflectionInstance*& out_list, void* instance)
@@ -164,20 +158,20 @@ namespace Reflection
         return 0;
     }
 
-    FieldAccessor TypeMeta::getFieldByName(const char* name)
+    FieldAccessor TypeMeta::getFieldByName(const std::string& name)
     {
         const auto it = std::find_if(m_fields.begin(), m_fields.end(), [&](const auto& i) {
-            return std::strcmp(i.getFieldName(), name) == 0;
+            return std::strcmp(i.getFieldName(), name.c_str()) == 0;
         });
         if (it != m_fields.end())
             return *it;
         return FieldAccessor(nullptr);
     }
 
-    MethodAccessor TypeMeta::getMethodByName(const char* name)
+    MethodAccessor TypeMeta::getMethodByName(const std::string& name)
     {
         const auto it = std::find_if(m_methods.begin(), m_methods.end(), [&](const auto& i) {
-            return std::strcmp(i.getMethodName(), name) == 0;
+            return std::strcmp(i.getMethodName(), name.c_str()) == 0;
         });
         if (it != m_methods.end())
             return *it;
@@ -298,7 +292,6 @@ namespace Reflection
         m_method_name      = dest.m_method_name;
         return *this;
     }
-    void MethodAccessor::invoke(void* instance) { (std::get<1>(*m_functions))(instance); }
     ArrayAccessor::ArrayAccessor() :
         m_func(nullptr), m_array_type_name("UnKnownType"), m_element_type_name("UnKnownType")
     {}
