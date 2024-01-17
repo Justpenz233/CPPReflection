@@ -410,3 +410,54 @@ namespace Reflection
         T* m_instance{nullptr};
     };
 } // namespace Reflection
+
+
+namespace Reflection
+{
+    namespace TypeFieldReflectionOparator
+    {
+        template<typename T>
+        struct function_traits : function_traits<decltype(&T::operator())>
+        {
+        };
+
+        template<typename R, typename... Args>
+        struct function_traits<R(*)(Args...)>
+        {
+            using args_tuple = std::tuple<Args...>;
+            using return_type = R;
+        };
+
+        template<typename C, typename R, typename... Args>
+        struct function_traits<R(C::*)(Args...)>
+        {
+            using args_tuple = std::tuple<Args...>;
+            using return_type = R;
+        };
+
+        template<typename C, typename R, typename... Args>
+        struct function_traits<R(C::*)(Args...) const>
+        {
+            using args_tuple = std::tuple<Args...>;
+            using return_type = R;
+        };
+
+
+        template<typename Func, class ClassType, typename TupleType>
+        static std::any InvokeFun(Func&& func, void* instance, const std::any& Parameter, std::true_type)
+        {
+            std::apply(std::forward<Func>(func),
+                       std::tuple_cat(std::make_tuple(static_cast<ClassType *>(instance)),
+                                      *std::any_cast<TupleType *>(Parameter)));
+            return {};
+        }
+
+        template<typename Func, class ClassType, typename TupleType>
+        static std::any InvokeFun(Func&& func, void* instance, const std::any& Parameter, std::false_type)
+        {
+            return std::apply(std::forward<Func>(func),
+                              std::tuple_cat(std::make_tuple(static_cast<ClassType *>(instance)),
+                                             *std::any_cast<TupleType *>(Parameter)));
+        }
+    }
+}; // namespace Reflection::TypeFieldReflectionOparator
