@@ -1,6 +1,5 @@
 #pragma once
 #include <any>
-
 #include "Reflection/json.h"
 #include <functional>
 #include <string>
@@ -8,6 +7,11 @@
 #include <unordered_set>
 #include <vector>
 
+
+#define DefineDefaultConstructor(class_name) \
+    friend class _ObjectDefaultConstructor<class_name, true>;\
+    friend class _ObjectDefaultConstructor<class_name, false>;\
+    public: class_name(const MObjectInitiliazer&) {}; \
 
 #if defined(__REFLECTION_PARSER__)
 #define MPROPERTY(...) __attribute__((annotate("MPROPERTY" #__VA_ARGS__)))
@@ -20,13 +24,16 @@
 #define REFLECTION_BODY_OBJECT(class_name) \
     friend class Reflection::TypeFieldReflectionOparator::Type##class_name##Operator; \
     friend class Serializer; \
-    public: virtual std::string GetClassName() const { return #class_name; }
+    public: virtual std::string GetClassName() const { return #class_name; }\
+    private: DefineDefaultConstructor(class_name)
 
 
 #define REFLECTION_BODY(class_name) \
     friend class Reflection::TypeFieldReflectionOparator::Type##class_name##Operator; \
     friend class Serializer; \
-    public: virtual std::string GetClassName() const override { return #class_name; }
+    public: virtual std::string GetClassName() const override { return #class_name; }\
+    private: DefineDefaultConstructor(class_name)
+
 
 #define REFLECTION_TYPE(class_name, ...) \
     namespace Reflection \
