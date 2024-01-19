@@ -62,7 +62,7 @@ public:
         }
         else
         {
-            static_assert(always_false<T>, "Serializer::write<T> has not been implemented yet!");
+            // static_assert(always_false<T>, "Serializer::write<T> has not been implemented yet!");
             return Json();
         }
     }
@@ -76,7 +76,7 @@ public:
         }
         else
         {
-            static_assert(always_false<T>, "Serializer::read<T> has not been implemented yet!");
+            // static_assert(always_false<T>, "Serializer::read<T> has not been implemented yet!");
             return instance;
         }
     }

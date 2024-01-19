@@ -186,6 +186,12 @@ namespace Reflection
 
         void* get(void* instance);
 
+        template <typename T>
+        T get(void* instance)
+        {
+            return *static_cast<T*>(get(instance));
+        }
+
         void set(void* instance, void* value);
 
         TypeMeta getOwnerTypeMeta();
@@ -198,11 +204,16 @@ namespace Reflection
          *        true: it's a reflection type
          *        false: it's not a reflection type
          */
-        bool getTypeMeta(TypeMeta& field_type);
+        bool getTypeMeta(TypeMeta& field_type) const;
+
+        const char* getTypeName() const;
 
         const char* getFieldName() const;
 
         const char* getFieldTypeName();
+
+        // Remove ref and const and namespace
+        std::string GetPureTypeName();
 
         bool isArrayType();
 

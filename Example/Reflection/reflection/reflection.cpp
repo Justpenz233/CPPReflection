@@ -226,6 +226,7 @@ namespace Reflection
     {
         // todo: should check validation
         (std::get<0>(*m_functions))(instance, value);
+    	static_cast<Object*>(instance)->PostEdit(*this);
     }
 
     TypeMeta FieldAccessor::getOwnerTypeMeta()
@@ -235,15 +236,38 @@ namespace Reflection
         return f_type;
     }
 
-    bool FieldAccessor::getTypeMeta(TypeMeta& field_type)
+    bool FieldAccessor::getTypeMeta(TypeMeta& field_type) const
     {
         TypeMeta f_type(m_field_type_name);
         field_type = f_type;
         return f_type.m_is_valid;
     }
 
+    const char* FieldAccessor::getTypeName() const
+    {
+        return m_field_type_name;
+    }
+
     const char* FieldAccessor::getFieldName() const { return class_name; }
     const char* FieldAccessor::getFieldTypeName() { return m_field_type_name; }
+
+    std::string FieldAccessor::GetPureTypeName()
+    {
+        std::string CurrentType = m_field_type_name;
+        // Remove const in name
+        while (CurrentType.find("const") != std::string::npos)
+            CurrentType.erase(CurrentType.find("const"), 5);
+        // Remove reference in name
+        while (CurrentType.find("&") != std::string::npos)
+            CurrentType.erase(CurrentType.find("&"), 1);
+        // Remove namespace, only keep char after last "::"
+        if (int pos = CurrentType.find_last_of("::"); pos != std::string::npos)
+            CurrentType = CurrentType.substr(pos + 1);
+        // Remove space
+        while (CurrentType.find(" ") != std::string::npos)
+            CurrentType.erase(CurrentType.find(" "), 1);
+        return CurrentType;
+    }
 
     bool FieldAccessor::isArrayType()
     {

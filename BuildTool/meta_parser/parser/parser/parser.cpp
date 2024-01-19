@@ -133,6 +133,7 @@ bool MetaParser::parseProject()
     include_file << "#define __" << output_filename << "__" << std::endl;
 
     int Updated = 0;
+	std::vector<std::string> AllIncludeFiles;
     for (auto include_item : inlcude_files)
     {
         std::string temp_string(include_item);
@@ -144,12 +145,18 @@ bool MetaParser::parseProject()
         if(temp_string.find("_generated") != std::string::npos) continue;
 
         std::string IncludeFileCode ="#include  \"" + temp_string + "\"\n";
-        
-        if( FileTimeDB->IsUpdated(temp_string) ){
-            include_file << IncludeFileCode;
-            Updated ++;
-        }
+    	AllIncludeFiles.push_back(IncludeFileCode);
+
+        if( FileTimeDB->IsUpdated(temp_string) ) Updated ++;
     }
+
+	if(Updated > 0)
+	{
+		for(std::string i : AllIncludeFiles)
+		{
+			include_file << i;
+		}
+	}
     std::cout << "Parsing updated file : " << Updated << std::endl;
     include_file << "#endif" << std::endl;
     include_file.close();
