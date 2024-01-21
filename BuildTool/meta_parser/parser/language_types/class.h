@@ -42,6 +42,8 @@ public:
     SharedPtrVector<BaseClass> m_base_classes;
 
 public:
+	bool bIsClass; // Class or struct
+
     std::string m_name;
 
     std::string m_qualified_name;

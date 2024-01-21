@@ -26,15 +26,14 @@ public:
         SourceFile = cursor.getSourceFile();
         SourceLine = cursor.getSourceLine();
         Name = cursor.getDisplayName();
-        if(Name.substr(0, 6) != "MCLASS") return;
+        if(Name.substr(0, 4) != "MTAG") return;
         Valid = true;
         std::string temp;
         std::stringstream stringstream { cursor.getDisplayName() };
         while (std::getline(stringstream, temp, '_')) {
             Tags.push_back(temp);
         }
-        // 0: ClassName 1: MCLASS
-        std::swap(Tags[0], Tags[1]);
+    	std::swap(Tags.front(), Tags.back());
     }
 
     std::string GetClassName() const { return Tags[0]; }

@@ -13,6 +13,7 @@ Class::Class(const Cursor& cursor, const Namespace& current_namespace) :
     m_qualified_name(Utils::getTypeNameWithoutNamespace(cursor.getType())),
     m_display_name(Utils::getNameWithoutFirstM(m_qualified_name))
 {
+	bIsClass = (cursor.getKind() == CXCursor_ClassDecl);
     Utils::replaceAll(m_name, " ", "");
     std::vector<std::string> BaseNames;
     for (auto& child : cursor.getChildren())
@@ -72,9 +73,14 @@ void Class::TrySetClassTag(class_tag&& InTag)
 bool Class::shouldCompile(void) const 
 { 
     if(m_name == "Object") return true;
-    if(!IsDerivedFrom("Object")) return false;
-    if(m_meta_data.getFlag(NativeProperty::MCLASS)) return true;
-    if(Tag.getFlag(NativeProperty::MCLASS)) return true;
+	// Is class, derived from Object, has MCLASS tag
+    if(bIsClass && IsDerivedFrom("Object")
+    	&& Tag.getFlag(NativeProperty::MCLASS))
+    	return true;
+	// Is struct, has MSTRUCT tag
+	if(!bIsClass && Tag.getFlag(NativeProperty::MSTRUCT))
+		return true;
+
     return false;
 }
 
