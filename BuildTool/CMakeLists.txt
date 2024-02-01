@@ -44,7 +44,7 @@ function(PreCompile GeneratedPath Targets)
     set(INCLUDE_DIRS)
     set(GENERATED_DIR ${GeneratedPath})
 
-    foreach(Target ${Targets})
+    foreach(Target IN LISTS Targets)
         get_target_property(TargetHeader ${Target} PARSE_HEADERS)
         list(APPEND BuildHeaders ${TargetHeader})
 

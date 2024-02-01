@@ -21,6 +21,10 @@ set_target_properties(TestLib PROPERTIES PARSE_HEADERS "${HEADER_FILES}")
 # The first parameter is the path which you want to place the generated code
 # Usually this path is the same as your target's source directory in your source tree 
 PreCompile("${PATH_TO_PLACE_GENERATED_CODE}" TestLib)
+# !
+# If you have multi target needs to be parsed, call with a list
+# set(PrecompileList TestLib1 TestLib2)
+# PreCompile("${PATH_TO_PLACE_GENERATED_CODE}" "${PrecompileList}")
 # ---------------------------------------
 
 ```
