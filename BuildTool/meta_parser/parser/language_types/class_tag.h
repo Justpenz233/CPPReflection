@@ -24,6 +24,9 @@ public:
     class_tag(const Cursor& cursor)
     {
         SourceFile = cursor.getSourceFile();
+    	std::filesystem::path path(SourceFile);
+    	SourceFile = path.lexically_normal();
+
         SourceLine = cursor.getSourceLine();
         Name = cursor.getDisplayName();
         if(Name.substr(0, 4) != "MTAG") return;

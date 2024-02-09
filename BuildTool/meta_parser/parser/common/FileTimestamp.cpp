@@ -1,9 +1,16 @@
-#include "FileTimestamp.h"
+#include "MetaDB.h"
 #include <fstream>
 #include <format>
 
 
-FileTimestamp::FileTimestamp(std::string PathToDB)
+
+std::string NormalPath(std::string Path)
+{
+	std::filesystem::path p(Path);
+	return p.lexically_normal();
+}
+
+MetaDB::MetaDB(std::string PathToDB)
 {
     DBFilePath = PathToDB;
     DBFilePath = DBFilePath / "_generated" / "DB";
@@ -15,13 +22,22 @@ FileTimestamp::FileTimestamp(std::string PathToDB)
         std::size_t FileTime;
         while(!DBFile.eof()) {
             DBFile >> FilePath >> FileTime;
-            DB[FilePath] = FileTime;
+        	DB[FilePath].FileName = FilePath;
+			DB[FilePath].TimeStamp = FileTime;
+        	int ClassNum;
+        	DBFile >> ClassNum;
+        	for(int i = 0; i < ClassNum; i++)
+			{
+				std::string ClassName;
+				DBFile >> ClassName;
+				DB[FilePath].ContainClass.insert(ClassName);
+			}
         }
         DBFile.close();
     }
 }
 
-FileTimestamp::~FileTimestamp()
+MetaDB::~MetaDB()
 {
     std::ofstream DBFile(DBFilePath);
 
@@ -29,7 +45,16 @@ FileTimestamp::~FileTimestamp()
     {
         for(auto p : DB)
         {
-            DBFile << p.first << " " << p.second << std::endl;
+        	// File name and timestamp
+            DBFile << p.second.FileName << " " << p.second.TimeStamp << std::endl;
+
+        	// Contain class
+			DBFile << p.second.ContainClass.size() << " ";
+        	for(auto i : p.second.ContainClass)
+			{
+				DBFile << i << " ";
+			}
+        	DBFile << std::endl;
         }
     }
     std::cout << "Updating CODE database : " << DBFilePath << std::endl;
@@ -44,18 +69,27 @@ std::time_t to_time_t(TP tp)
               + system_clock::now());
     return system_clock::to_time_t(sctp);
 }
-bool FileTimestamp::IsUpdated(std::string FilePath)
+bool MetaDB::IsUpdated(std::string FilePath)
 {
-    std::filesystem::file_time_type ftime = std::filesystem::last_write_time(FilePath);
-    std::time_t t = to_time_t(ftime);
+	std::filesystem::file_time_type ftime = std::filesystem::last_write_time(FilePath);
+	std::time_t						t = to_time_t(ftime);
 
-    // 将 std::time_t 转换为字符串
-    std::string timeString = std::ctime(&t);
-    std::size_t str_hash = std::hash<std::string>{}(timeString);
-    if(DB.count(FilePath) == 0 || DB[FilePath] != str_hash) {
-        DB[FilePath] = str_hash;
-        return true;
-    }
-    else
-        return false;
+	FilePath = NormalPath(FilePath);
+	// 将 std::time_t 转换为字符串
+	std::string timeString = std::ctime(&t);
+	std::size_t str_hash = std::hash<std::string>{}(timeString);
+	if (DB.count(FilePath) == 0 || DB[FilePath].TimeStamp != str_hash)
+	{
+		DB[FilePath].TimeStamp = str_hash;
+		DB[FilePath].FileName = FilePath;
+		return true;
+	}
+	else
+		return false;
+}
+void MetaDB::RegisterClass(std::string ClassName, std::string FilePath)
+{
+	FilePath = NormalPath(FilePath);
+	std::cout << "Registering class : " << ClassName << " in " << FilePath << std::endl;
+	DB[FilePath].ContainClass.insert(ClassName);
 }

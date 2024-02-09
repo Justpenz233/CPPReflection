@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common/precompiled.h"
-#include "common/FileTimestamp.h"
+#include "common/MetaDB.h"
 #include "common/namespace.h"
 #include "common/schema_module.h"
 
@@ -33,7 +33,7 @@ public:
 
 private:
     std::string m_project_input_file;
-    std::shared_ptr<FileTimestamp> FileTimeDB;
+    std::shared_ptr<MetaDB> DB;
     std::vector<std::string> m_work_paths;
     std::string              m_module_name;
     std::string              m_sys_include;

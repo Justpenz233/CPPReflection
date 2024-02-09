@@ -1,4 +1,4 @@
-#include "common/FileTimestamp.h"
+#include "common/MetaDB.h"
 #include "common/precompiled.h"
 
 #include "language_types/class.h"
@@ -57,7 +57,7 @@ MetaParser::MetaParser(const std::string project_input_file,
         m_sys_include(sys_include), m_module_name(module_name), m_is_show_errors(is_show_errors), m_build_tool_dir(build_tool_dir), m_out_dir(out_dir)
 {
     m_work_paths = Utils::split(include_path, ",");
-    FileTimeDB = std::make_shared<FileTimestamp>(m_work_paths[0]);
+    DB = std::make_shared<MetaDB>(m_work_paths[0]);
     m_generators.emplace_back(new Generator::SerializerGenerator(
             m_work_paths[0], out_dir, build_tool_dir, std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
     m_generators.emplace_back(new Generator::ReflectionGenerator(
@@ -138,7 +138,6 @@ bool MetaParser::parseProject()
     {
         std::string temp_string(include_item);
         Utils::replace(temp_string, '\\', '/');
-        int pos;
         // Remove endl
         temp_string.erase(std::remove(temp_string.begin(), temp_string.end(), '\n'));
         
@@ -147,7 +146,7 @@ bool MetaParser::parseProject()
         std::string IncludeFileCode ="#include  \"" + temp_string + "\"\n";
     	AllIncludeFiles.push_back(IncludeFileCode);
 
-        if( FileTimeDB->IsUpdated(temp_string) ) Updated ++;
+        if( DB->IsUpdated(temp_string) ) Updated ++;
     }
 
 	if(Updated > 0)
@@ -268,6 +267,8 @@ void MetaParser::buildClassAST(const Cursor& cursor, Namespace& current_namespac
             auto class_ptr = std::make_shared<Class>(child, current_namespace);
             class_ptr->TrySetClassTag(std::move(LastTagVar));
             TRY_ADD_LANGUAGE_TYPE(class_ptr, classes);
+        	if(class_ptr->shouldCompile())
+        		DB->RegisterClass(class_ptr->m_name, class_ptr->getSourceFile());
         }
         else
         {
