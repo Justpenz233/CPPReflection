@@ -57,7 +57,7 @@ MetaParser::MetaParser(const std::string project_input_file,
         m_sys_include(sys_include), m_module_name(module_name), m_is_show_errors(is_show_errors), m_build_tool_dir(build_tool_dir), m_out_dir(out_dir)
 {
     m_work_paths = Utils::split(include_path, ",");
-    DB = std::make_shared<MetaDB>(m_work_paths[0]);
+    MetaDB::InitSingleton(m_work_paths[0]);
     m_generators.emplace_back(new Generator::SerializerGenerator(
             m_work_paths[0], out_dir, build_tool_dir, std::bind(&MetaParser::getIncludeFile, this, std::placeholders::_1)));
     m_generators.emplace_back(new Generator::ReflectionGenerator(
@@ -87,9 +87,8 @@ void MetaParser::finish(void)
     }
 }
 
-bool MetaParser::parseProject()
+MetaParser::ParseStatus MetaParser::parseProject()
 {
-    bool result = true;
     std::cout << "Parsing project file: " << m_project_input_file << std::endl;
 
     std::fstream include_txt_file(m_project_input_file, std::ios::in);
@@ -97,7 +96,7 @@ bool MetaParser::parseProject()
     if (include_txt_file.fail())
     {
         std::cout << "Could not load file: " << m_project_input_file << std::endl;
-        return false;
+        return ParseStatus::Failed;
     }
 
     std::stringstream buffer;
@@ -112,7 +111,7 @@ bool MetaParser::parseProject()
     if (!include_file.is_open())
     {
         std::cout << "Could not open the Source Include file: " << m_source_include_file_name << std::endl;
-        return false;
+        return ParseStatus::Failed;
     }
 
     std::cout << "Generating the Source Include file: " << m_source_include_file_name << std::endl;
@@ -132,8 +131,8 @@ bool MetaParser::parseProject()
     include_file << "#ifndef __" << output_filename << "__" << std::endl;
     include_file << "#define __" << output_filename << "__" << std::endl;
 
-    int Updated = 0;
 	std::vector<std::string> AllIncludeFiles;
+	bool IsUpdated = false;
     for (auto include_item : inlcude_files)
     {
         std::string temp_string(include_item);
@@ -144,22 +143,20 @@ bool MetaParser::parseProject()
         if(temp_string.find("_generated") != std::string::npos) continue;
 
         std::string IncludeFileCode ="#include  \"" + temp_string + "\"\n";
-    	AllIncludeFiles.push_back(IncludeFileCode);
 
-        if( DB->IsUpdated(temp_string) ) Updated ++;
+        if( MetaDB::Get().IsUpdated(temp_string) )
+        {
+        	include_file << IncludeFileCode;
+        	IsUpdated = true;
+        }
     }
 
-	if(Updated > 0)
-	{
-		for(std::string i : AllIncludeFiles)
-		{
-			include_file << i;
-		}
-	}
-    std::cout << "Parsing updated file : " << Updated << std::endl;
     include_file << "#endif" << std::endl;
     include_file.close();
-    return result;
+	if (IsUpdated)
+		return Successful;
+	else
+		return NotUpdated;
 }
 
 void printDiagnostics(CXTranslationUnit translationUnit) {
@@ -184,12 +181,17 @@ void printDiagnostics(CXTranslationUnit translationUnit) {
 
 int MetaParser::parse(void)
 {
-    bool parse_include_ = parseProject();
-    if (!parse_include_)
+    auto parse_include_ = parseProject();
+    if (parse_include_ == Failed)
     {
         std::cerr << "Parsing project file error! " << std::endl;
         return -1;
     }
+	// if (parse_include_ == NotUpdated)
+	// {
+	// 	std::cout << "No file is updated, skip parsing" << std::endl;
+	// 	return 1;
+	// }
 
     std::cerr << "Parsing the whole project..." << std::endl;
     int is_show_errors      = m_is_show_errors ? 1 : 0;
@@ -268,7 +270,7 @@ void MetaParser::buildClassAST(const Cursor& cursor, Namespace& current_namespac
             class_ptr->TrySetClassTag(std::move(LastTagVar));
             TRY_ADD_LANGUAGE_TYPE(class_ptr, classes);
         	if(class_ptr->shouldCompile())
-        		DB->RegisterClass(class_ptr->m_name, class_ptr->getSourceFile());
+        		MetaDB::Get().RegisterClass(class_ptr->m_name, class_ptr->getSourceFile());
         }
         else
         {

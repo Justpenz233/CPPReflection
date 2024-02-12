@@ -16,7 +16,7 @@ namespace Generator
             m_root_path(root_path), m_get_include_func(get_include_func), m_build_tool_dir(build_tool_dir)
         {}
         virtual int  generate(std::string path, SchemaMoudle schema) = 0;
-        virtual void finish() {};
+        virtual void finish() {}
 
         virtual ~GeneratorInterface() {};
 

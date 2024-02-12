@@ -33,7 +33,6 @@ public:
 
 private:
     std::string m_project_input_file;
-    std::shared_ptr<MetaDB> DB;
     std::vector<std::string> m_work_paths;
     std::string              m_module_name;
     std::string              m_sys_include;
@@ -64,7 +63,14 @@ private:
     bool m_is_show_errors;
 
 private:
-    bool        parseProject(void);
+	enum ParseStatus
+	{
+		Successful,
+		Failed,
+		NotUpdated
+	};
+	// Determine which file to parse
+    ParseStatus        parseProject(void);
     void        buildClassAST(const Cursor& cursor, Namespace& current_namespace);
     std::string getIncludeFile(std::string name);
 };

@@ -4,7 +4,7 @@
 
 #include "language_types/class.h"
 #include "template_manager/template_manager.h"
-
+#include <vector>
 #include <map>
 #include <set>
 
@@ -112,9 +112,9 @@ namespace Generator
         std::string render_string =
             TemplateManager::getInstance()->renderByTemplate("commonReflectionFile", mustache_data);
         Utils::saveFile(render_string, file_path);
-        m_sourcefile_list.emplace_back(tmp);
+        m_sourcefile_list.insert(tmp);
 
-        m_head_file_list.emplace_back(Utils::makeRelativePath(m_root_path, file_path).string());
+        m_head_file_list.insert(Utils::makeRelativePath(m_root_path, file_path).string());
         return 0;
     }
     void ReflectionGenerator::finish()
@@ -122,11 +122,16 @@ namespace Generator
         Mustache::data mustache_data;
         Mustache::data include_headfiles = Mustache::data::type::list;
         Mustache::data sourefile_names    = Mustache::data::type::list;
-
+		for (auto& path : MetaDB::Get().GetAllShouldCompileHeader())
+		{
+			m_head_file_list.insert(Utils::makeRelativePath(m_root_path, processFileName(path)).string());
+			m_sourcefile_list.insert(Utils::convertNameToUpperCamelCase(fs::path(path).stem().string(), "_"));
+		}
         for (auto& head_file : m_head_file_list)
         {
             include_headfiles.push_back(Mustache::data("headfile_name", head_file));
         }
+
         for (auto& sourefile_name_upper_camel_case : m_sourcefile_list)
         {
             sourefile_names.push_back(Mustache::data("sourefile_name_upper_camel_case", sourefile_name_upper_camel_case));

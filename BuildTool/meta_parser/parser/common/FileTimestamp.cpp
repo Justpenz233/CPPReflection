@@ -2,8 +2,6 @@
 #include <fstream>
 #include <format>
 
-
-
 std::string NormalPath(std::string Path)
 {
 	std::filesystem::path p(Path);
@@ -92,4 +90,35 @@ void MetaDB::RegisterClass(std::string ClassName, std::string FilePath)
 	FilePath = NormalPath(FilePath);
 	std::cout << "Registering class : " << ClassName << " in " << FilePath << std::endl;
 	DB[FilePath].ContainClass.insert(ClassName);
+}
+std::vector<std::string> MetaDB::GetAllHeaderPath() const
+{
+	std::vector<std::string> ret;
+	for (auto p : DB)
+	{
+		ret.push_back(p.first);
+	}
+	return ret;
+}
+
+std::vector<std::string> MetaDB::GetAllShouldCompileHeader() const
+{
+	std::vector<std::string> ret;
+	for (auto p : DB)
+	{
+		if(!p.second.ContainClass.empty())
+			ret.push_back(p.first);
+	}
+	return ret;
+}
+
+void MetaDB::InitSingleton(std::string PathToDB)
+{
+	Get() = MetaDB(std::move(PathToDB));
+}
+
+MetaDB& MetaDB::Get()
+{
+	static MetaDB instance;
+	return instance;
 }
