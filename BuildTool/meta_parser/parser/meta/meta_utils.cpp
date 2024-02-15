@@ -323,14 +323,36 @@ namespace Utils
         return 0;
     }
     std::string convertNameToUpperCamelCase(const std::string& name, std::string pat)
+	{
+		std::string ret_string;
+		auto&&		name_spilts = split(name, pat);
+		for (auto& split_string : name_spilts)
+		{
+			split_string[0] = toupper(split_string[0]);
+			ret_string.append(split_string);
+		}
+		return ret_string;
+	}
+	bool ShouldCompileFile(std::string Path)
     {
-        std::string ret_string;
-        auto&& name_spilts = split(name, pat);
-        for (auto& split_string : name_spilts)
-        {
-            split_string[0] = toupper(split_string[0]);
-            ret_string.append(split_string);
-        }
-        return ret_string;
+	    std::ifstream file(Path);
+    	if (!file.is_open())
+    	{
+    		std::cerr << "Failed to open the file : " << Path << std::endl;
+    		return false;
+    	}
+    	std::string word;
+    	auto Tags = NativeProperty::MTags;
+    	while (file >> word) {
+    		// Check if the word is in the set
+    		for(auto tag : Tags)
+    		{
+    			if (word.find(tag) != std::string::npos)
+    			{
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
     }
 } // namespace Utils

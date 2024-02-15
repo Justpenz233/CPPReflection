@@ -55,6 +55,9 @@ namespace Utils
 
     std::string convertNameToUpperCamelCase(const std::string& name, std::string pat);
 
+	//Check if the file should be compiled, by checking if the file contain meta tags
+	bool ShouldCompileFile(std::string Path);
+
 } // namespace Utils
 
 #include "meta_utils.hpp"

@@ -10,4 +10,8 @@ namespace NativeProperty
 
     const auto MFUNCTION = "MFUNCTION";
 
+	const auto MENUM = "MENUM";
+
+	inline std::set<std::string> MTags = { MCLASS, MSTRUCT, MPROPERTY, MFUNCTION, MENUM };
+
 } // namespace NativeProperty

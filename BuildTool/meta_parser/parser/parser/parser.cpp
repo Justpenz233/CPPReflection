@@ -139,8 +139,12 @@ MetaParser::ParseStatus MetaParser::parseProject()
         Utils::replace(temp_string, '\\', '/');
         // Remove endl
         temp_string.erase(std::remove(temp_string.begin(), temp_string.end(), '\n'));
-        
+
+    	// Filter out generated files
         if(temp_string.find("_generated") != std::string::npos) continue;
+
+    	// Filter out should compile files
+		if(!Utils::ShouldCompileFile(temp_string)) continue;
 
         std::string IncludeFileCode ="#include  \"" + temp_string + "\"\n";
 
