@@ -11,8 +11,8 @@ namespace Reflection{
     public:
         static const char* getClassName(){ return "{{class_name}}";}
         static void* constructorWithJson(const Json& json_context){
-            constexpr bool HasDefaultConstructor = std::is_default_constructible<{{class_name}}>::value;
-            {{class_name}}* ret_instance= _ObjectDefaultConstructor<{{class_name}}, HasDefaultConstructor>::_InternalConstructor(MObjectInitiliazer::Get());
+            CheckDefaultConstructible({{class_name}});
+            {{class_name}}* ret_instance= new {{class_name}}();
             Serializer::read(json_context, *ret_instance);
             return ret_instance;
         }

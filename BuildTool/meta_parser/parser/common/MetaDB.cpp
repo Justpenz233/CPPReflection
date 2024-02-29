@@ -10,7 +10,7 @@ std::string NormalPath(std::string Path)
 
 MetaDB::MetaDB(std::string PathToDB)
 {
-    DBFilePath = PathToDB;
+    DBFilePath = NormalPath(PathToDB);
     DBFilePath = DBFilePath / "_generated" / "DB";
     std::ifstream DBFile(DBFilePath);
     std::cout << "Reading CODE database : " << DBFilePath << std::endl;
@@ -54,10 +54,11 @@ MetaDB::~MetaDB()
 			}
         	DBFile << std::endl;
         }
+    	std::cout << "Updating CODE database : " << DBFilePath << std::endl;
+    	DBFile.close();
     }
-    std::cout << "Updating CODE database : " << DBFilePath << std::endl;
-
-    DBFile.close();
+	else
+		std::cerr << "Failed to open file : " << DBFilePath << std::endl;
 }
 template <typename TP>
 std::time_t to_time_t(TP tp)
