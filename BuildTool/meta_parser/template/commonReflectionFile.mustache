@@ -23,11 +23,11 @@ namespace Reflection{
         static int get{{class_name}}BaseClassReflectionInstanceList(ReflectionInstance* &out_list, void* instance){
             int count = {{class_base_class_size}};
             {{#class_has_base}}out_list = new ReflectionInstance[count];
-            for (int i=0;i<count;++i){
+            int i = 0;
             {{#class_base_class_defines}}
-               out_list[i] = TypeMetaDef({{class_base_class_name}},static_cast<{{class_name}}*>(instance));
+               out_list[i++] = TypeMetaDef({{class_base_class_name}},static_cast<{{class_name}}*>(instance));
             {{/class_base_class_defines}}
-            }{{/class_has_base}}
+            {{/class_has_base}}
             return count;
         }
         // fields
