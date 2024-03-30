@@ -1,11 +1,11 @@
 #include "MetaDB.h"
 #include <fstream>
-#include <format>
+//#include <format>
 
 std::string NormalPath(std::string Path)
 {
 	std::filesystem::path p(Path);
-	return p.lexically_normal();
+	return p.lexically_normal().string();
 }
 
 MetaDB::MetaDB(std::string PathToDB)

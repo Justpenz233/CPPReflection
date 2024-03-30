@@ -3,6 +3,7 @@
 #include <iostream>
 #include <filesystem>
 #include <set>
+#include <vector>
 
 struct FileData
 {

@@ -58,7 +58,7 @@ MetaParser::MetaParser(const std::string project_input_file,
 {
     m_work_paths = Utils::split(include_path, ",");
     for (auto& work_path : m_work_paths)
-	    work_path = std::filesystem::path(work_path).lexically_normal();
+	    work_path = std::filesystem::path(work_path).lexically_normal().string();
 	std::cout << "Work Paths: " << m_work_paths[0] << std::endl;
     MetaDB::InitSingleton(out_dir);
     m_generators.emplace_back(new Generator::SerializerGenerator(

@@ -25,7 +25,7 @@ public:
     {
         SourceFile = cursor.getSourceFile();
     	std::filesystem::path path(SourceFile);
-    	SourceFile = path.lexically_normal();
+    	SourceFile = path.lexically_normal().string();
 
         SourceLine = cursor.getSourceLine();
         Name = cursor.getDisplayName();

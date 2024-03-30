@@ -1,5 +1,5 @@
 #include "common/precompiled.h"
-
+#include <fstream>
 #include "meta_utils.h"
 
 static int parse_flag = 0;
@@ -246,7 +246,7 @@ namespace Utils
 
     std::string loadFile(std::string path)
     {
-        std::ifstream      iFile(path);
+        std::ifstream      iFile(path, std::ios::in);
         std::string        line_string;
         std::ostringstream template_stream;
         if (false == iFile.is_open())
@@ -335,7 +335,7 @@ namespace Utils
 	}
 	bool ShouldCompileFile(std::string Path)
     {
-	    std::ifstream file(Path);
+	    std::ifstream file(Path, std::ios::in);
     	if (!file.is_open())
     	{
     		std::cerr << "Failed to open the file : " << Path << std::endl;
