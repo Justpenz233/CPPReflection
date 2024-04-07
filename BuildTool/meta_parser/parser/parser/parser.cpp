@@ -2,7 +2,7 @@
 #include "common/precompiled.h"
 
 #include "language_types/class.h"
-
+#include "language_types/enum.h"
 #include "generator/reflection_generator.h"
 #include "generator/serializer_generator.h"
 
@@ -271,7 +271,11 @@ void MetaParser::buildClassAST(const Cursor& cursor, Namespace& current_namespac
         {
             LastTagVar = class_tag(child);
         }
-        if (child.isDefinition() && (kind == CXCursor_ClassDecl || kind == CXCursor_StructDecl))
+    	else if(child.isDefinition() && kind == CXCursor_EnumDecl)
+    	{
+    		EnumClass::Get().RegisterEnumClass(child.getDisplayName());
+    	}
+    	else if (child.isDefinition() && (kind == CXCursor_ClassDecl || kind == CXCursor_StructDecl))
         {
             auto class_ptr = std::make_shared<Class>(child, current_namespace);
             class_ptr->TrySetClassTag(std::move(LastTagVar));

@@ -8,6 +8,8 @@
 #include <map>
 #include <set>
 
+#include "language_types/enum.h"
+
 namespace Generator
 {
     ReflectionGenerator::ReflectionGenerator(std::string                             source_directory,
@@ -57,9 +59,11 @@ namespace Generator
 
             std::vector<std::string>                                   field_names;
             std::map<std::string, std::pair<std::string, std::string>> vector_map;
+        	std::set<std::string> enum_type_names;
 
             Mustache::data class_def;
             Mustache::data vector_defines(Mustache::data::type::list);
+        	Mustache::data enum_defines(Mustache::data::type::list);
 
             genClassRenderData(class_temp, class_def);
             for (auto field : class_temp->m_fields)
@@ -80,15 +84,21 @@ namespace Generator
 
                     vector_map[field->m_type] = std::make_pair(array_useful_name, item_type);
                 }
+
+            	bool is_enum = EnumClass::Get().IsEnumClass(field->m_type);
+            	if(is_enum)
+				{
+					enum_type_names.insert(field->m_type);
+				}
             }
 
-            if (vector_map.size() > 0)
+            if (!vector_map.empty())
             {
                 if (nullptr == class_def.get("vector_exist"))
                 {
                     class_def.set("vector_exist", true);
                 }
-                for (auto vector_item : vector_map)
+                for (const auto& vector_item : vector_map)
                 {
                     std::string    array_useful_name = vector_item.second.first;
                     std::string    item_type         = vector_item.second.second;
@@ -99,7 +109,21 @@ namespace Generator
                     vector_defines.push_back(vector_define);
                 }
             }
+        	if(!enum_type_names.empty())
+        	{
+        		if (nullptr == class_def.get("enum_exist"))
+        		{
+        			class_def.set("enum_exist", true);
+        		}
+        		for (const auto& enum_type_name : enum_type_names)
+				{
+					Mustache::data enum_define;
+					enum_define.set("enum_type_name", enum_type_name);
+					enum_defines.push_back(enum_define);
+				}
+        	}
             class_def.set("vector_defines", vector_defines);
+        	class_def.set("enum_defines", enum_defines);
             class_defines.push_back(class_def);
         }
 

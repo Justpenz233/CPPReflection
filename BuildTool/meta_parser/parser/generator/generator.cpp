@@ -2,6 +2,7 @@
 
 #include "generator/generator.h"
 #include "language_types/class.h"
+#include "language_types/enum.h"
 
 namespace Generator
 {
@@ -55,7 +56,9 @@ namespace Generator
             filed_define.set("class_field_type", field->m_type);
             filed_define.set("class_field_display_name", field->m_display_name);
             bool is_vector = field->m_type.find(vector_prefix) == 0;
+        	bool is_enum = EnumClass::Get().IsEnumClass(field->m_type);
             filed_define.set("class_field_is_vector", is_vector);
+        	filed_define.set("class_field_is_enum", is_enum);
             feild_defs.push_back(filed_define);
         }
     }

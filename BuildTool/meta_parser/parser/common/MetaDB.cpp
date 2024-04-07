@@ -88,8 +88,9 @@ bool MetaDB::IsUpdated(std::string FilePath)
 }
 void MetaDB::RegisterClass(std::string ClassName, std::string FilePath)
 {
+	static int count = 0;
 	FilePath = NormalPath(FilePath);
-	std::cout << "Registering class : " << ClassName << " in " << FilePath << std::endl;
+	std::cout << std::setw(3) << ++ count << "| Registering class :  " << std::setw(30) << std::left << ClassName  << "| in | " << FilePath << std::endl;
 	DB[FilePath].ContainClass.insert(ClassName);
 }
 std::vector<std::string> MetaDB::GetAllHeaderPath() const
