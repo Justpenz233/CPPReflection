@@ -141,7 +141,7 @@ MetaParser::ParseStatus MetaParser::parseProject()
         std::string temp_string(include_item);
         Utils::replace(temp_string, '\\', '/');
         // Remove endl
-        temp_string.erase(std::remove(temp_string.begin(), temp_string.end(), '\n'));
+        temp_string.erase(std::remove(temp_string.begin(), temp_string.end(), '\n'), temp_string.end());
 
     	// Filter out generated files
         if(temp_string.find("_generated") != std::string::npos) continue;

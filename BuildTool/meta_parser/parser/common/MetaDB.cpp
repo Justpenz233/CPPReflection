@@ -1,6 +1,5 @@
 #include "MetaDB.h"
 #include <fstream>
-#include <format>
 
 std::string NormalPath(std::string Path)
 {
@@ -74,7 +73,6 @@ bool MetaDB::IsUpdated(std::string FilePath)
 	std::time_t						t = to_time_t(ftime);
 
 	FilePath = NormalPath(FilePath);
-	// 将 std::time_t 转换为字符串
 	std::string timeString = std::ctime(&t);
 	std::size_t str_hash = std::hash<std::string>{}(timeString);
 	if (DB.count(FilePath) == 0 || DB[FilePath].TimeStamp != str_hash)
