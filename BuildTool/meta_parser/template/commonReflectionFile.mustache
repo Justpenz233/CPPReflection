@@ -37,6 +37,7 @@ namespace Reflection{
         static void* get_{{class_field_name}}(void* instance){ return static_cast<void*>(&(static_cast<{{class_name}}*>(instance)->{{class_field_name}}));}
         static constexpr bool isArray_{{class_field_name}}(){ {{#class_field_is_vector}}return true;{{/class_field_is_vector}}{{^class_field_is_vector}}return false;{{/class_field_is_vector}} }
         static constexpr bool isEnum_{{class_field_name}}(){ {{#class_field_is_enum}}return true;{{/class_field_is_enum}}{{^class_field_is_enum}}return false;{{/class_field_is_enum}} }
+        static constexpr bool isPointer_{{class_field_name}}(){ return IsAnyPointer<decltype({{class_name}}::{{class_field_name}})>; }
         {{/class_field_defines}}
 
         // methods
