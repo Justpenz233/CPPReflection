@@ -43,6 +43,8 @@ namespace Utils
 
     std::string formatQualifiedName(std::string& source_string)
     {
+    	Utils::replaceAll(source_string, "class ", "");
+    	Utils::replaceAll(source_string, " ", "");
         Utils::replace(source_string, '<', 'L');
         Utils::replace(source_string, ':', 'S');
         Utils::replace(source_string, '>', 'R');
@@ -153,7 +155,8 @@ namespace Utils
 
     std::string getNameWithoutContainer(std::string name)
     {
-
+		// remove "class " from the string
+    	name = Utils::replace(name, "class ", "");
         size_t left  = name.find_first_of('<') + 1;
         size_t right = name.find_last_of('>');
         if (left > 0 && right < name.size() && left < right)

@@ -36,7 +36,10 @@ namespace Generator
 
     int ReflectionGenerator::generate(std::string path, SchemaMoudle schema)
     {
-        static const std::string vector_prefix = "std::vector<";
+        static const std::string vector_prefix = "vector<";
+    	static const std::vector<std::string> pointer_prefix =
+    		{"shared_ptr<", "unique_ptr<", "weak_ptr<", "*",
+    		 "UniquePtr<", "SharedPtr<", "WeakPtr<", "ObjectPtr<"};
 
         std::string    file_path = processFileName(path);
 
@@ -64,6 +67,7 @@ namespace Generator
             Mustache::data class_def;
             Mustache::data vector_defines(Mustache::data::type::list);
         	Mustache::data enum_defines(Mustache::data::type::list);
+        	Mustache::data pointer_defines(Mustache::data::type::list);
 
             genClassRenderData(class_temp, class_def);
             for (auto field : class_temp->m_fields)
@@ -90,6 +94,23 @@ namespace Generator
 				{
 					enum_type_names.insert(field->m_type);
 				}
+
+            	bool is_pointer = false;
+            	for (const auto& prefix : pointer_prefix)
+				{
+					if (field->m_type.find(prefix) != std::string::npos)
+					{
+						is_pointer = true;
+						break;
+					}
+				}
+            	if (is_pointer)
+            	{
+            		Mustache::data pointer_define;
+            		pointer_define.set("pointer_full_type_name", field->m_type);
+            		pointer_define.set("pointer_useful_name", Utils::formatQualifiedName(field->m_type));
+            		pointer_defines.push_back(pointer_define);
+            	}
             }
 
             if (!vector_map.empty())
@@ -122,6 +143,11 @@ namespace Generator
 					enum_defines.push_back(enum_define);
 				}
         	}
+        	if (!pointer_defines.is_empty_list())
+        	{
+        		class_def.set("pointer_exist", true);
+        	}
+        	class_def.set("pointer_defines", pointer_defines);
             class_def.set("vector_defines", vector_defines);
         	class_def.set("enum_defines", enum_defines);
             class_defines.push_back(class_def);
