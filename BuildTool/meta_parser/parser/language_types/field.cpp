@@ -10,9 +10,6 @@ Field::Field(const Cursor& cursor, const Namespace& current_namespace, Class* pa
     m_type(Utils::getTypeNameWithoutNamespace(cursor.getType()))
 {
 	Utils::replaceAll(m_type, "class ", "");
-
-    auto ret_string = Utils::getStringWithoutQuot(m_meta_data.getProperty("default"));
-    m_default       = ret_string;
 }
 
 bool Field::shouldCompile(void) const { return isAccessible(); }

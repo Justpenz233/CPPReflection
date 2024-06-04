@@ -33,6 +33,11 @@ namespace Reflection{
         {{#class_field_defines}}// fields
         static const char* getFieldName_{{class_field_name}}(){ return "{{class_field_name}}";}
         static const char* getFieldTypeName_{{class_field_name}}(){ return "{{{class_field_type}}}";}
+        static const std::vector<ObjectPropertyTag*> getPropertyTags_{{class_field_name}}(){
+            std::vector<ObjectPropertyTag*> tags;
+            {{#class_field_tags}} tags.push_back(new {{{tags_constructor}}}); {{/class_field_tags}}
+            return tags;
+        }
         static void set_{{class_field_name}}(void* instance, void* field_value){ static_cast<{{class_name}}*>(instance)->{{class_field_name}} = *static_cast<{{{class_field_type}}}*>(field_value);}
         static void* get_{{class_field_name}}(void* instance){ return static_cast<void*>(&(static_cast<{{class_name}}*>(instance)->{{class_field_name}}));}
         static constexpr bool isArray_{{class_field_name}}(){ {{#class_field_is_vector}}return true;{{/class_field_is_vector}}{{^class_field_is_vector}}return false;{{/class_field_is_vector}} }

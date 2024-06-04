@@ -51,7 +51,17 @@ namespace Generator
             if (!field->shouldCompile())
                 continue;
             Mustache::data filed_define;
-
+        	Mustache::data filed_tags_data(Mustache::data::type::list);
+			for (auto& tag : field->getMetaData().getProperties())
+			{
+				if(!MetaInfo::IsReservedTag(tag))
+				{
+					Mustache::data filed_tag_def;
+					filed_tag_def.set("tags_constructor", tag);
+					filed_tags_data.push_back(filed_tag_def);
+				}
+			}
+        	filed_define.set("class_field_tags", filed_tags_data);
             filed_define.set("class_field_name", field->m_name);
             filed_define.set("class_field_type", field->m_type);
             filed_define.set("class_field_display_name", field->m_display_name);
