@@ -40,7 +40,7 @@ std::string Cursor::getSourceFile(void) const
 
     Utils::toString(clang_getFileName(file), filename);
 
-    return filename;
+    return std::filesystem::path(filename).lexically_normal().string();
 }
 
 int Cursor::getSourceLine() const

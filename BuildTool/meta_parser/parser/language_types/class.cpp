@@ -60,7 +60,7 @@ bool Class::IsDerivedFrom(std::string BaseName) const
     return ContainBase(m_name, BaseName);
 }
 
-void Class::TrySetClassTag(class_tag&& InTag)
+void Class::TrySetClassTag(const class_tag& InTag)
 {
     if (!InTag.Valid) return;
     if (m_name != InTag.GetClassName()) return;
@@ -70,12 +70,11 @@ void Class::TrySetClassTag(class_tag&& InTag)
 }
 
 // With MCLASS tag and derive from Object
-bool Class::shouldCompile(void) const 
+bool Class::shouldCompile() const
 { 
     if(m_name == "Object") return true;
 	// Is class, derived from Object, has MCLASS tag
-    if(bIsClass && IsDerivedFrom("Object")
-    	&& Tag.getFlag(NativeProperty::MCLASS))
+    if(bIsClass && IsDerivedFrom("Object") && Tag.getFlag(NativeProperty::MCLASS))
     	return true;
 	// Is struct, has MSTRUCT tag
 	if(!bIsClass && Tag.getFlag(NativeProperty::MSTRUCT))

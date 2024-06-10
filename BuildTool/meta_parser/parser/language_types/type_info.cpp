@@ -9,7 +9,7 @@ TypeInfo::TypeInfo(const Cursor& cursor, const Namespace& current_namespace) :
 
 const MetaInfo& TypeInfo::getMetaData(void) const { return m_meta_data; }
 
-std::string TypeInfo::getSourceFile(void) const { return m_root_cursor.getSourceFile(); }
+std::string TypeInfo::getSourceFile(void) const { return std::filesystem::path(m_root_cursor.getSourceFile()).lexically_normal().string(); }
 int TypeInfo::getSourceLine(void) const { return m_root_cursor.getSourceLine(); }
 
 Namespace TypeInfo::getCurrentNamespace() const { return m_namespace; }

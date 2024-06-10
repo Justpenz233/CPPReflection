@@ -278,7 +278,7 @@ void MetaParser::buildClassAST(const Cursor& cursor, Namespace& current_namespac
     	else if (child.isDefinition() && (kind == CXCursor_ClassDecl || kind == CXCursor_StructDecl))
         {
             auto class_ptr = std::make_shared<Class>(child, current_namespace);
-            class_ptr->TrySetClassTag(std::move(LastTagVar));
+			class_ptr->TrySetClassTag(LastTagVar);
             TRY_ADD_LANGUAGE_TYPE(class_ptr, classes);
         	if(class_ptr->shouldCompile())
         		MetaDB::Get().RegisterClass(class_ptr->m_name, class_ptr->getSourceFile());

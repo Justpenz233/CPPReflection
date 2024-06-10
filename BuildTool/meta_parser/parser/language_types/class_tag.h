@@ -38,6 +38,9 @@ public:
         }
     	std::swap(Tags.front(), Tags.back());
     }
+	class_tag(const class_tag&InTag) = default;
+	class_tag(class_tag&&InTag) = default;
+	class_tag& operator=(const class_tag&InTag) = default;
 
     std::string GetClassName() const { return Tags[0]; }
     bool getFlag(std::string flag) const { return std::find(Tags.begin(), Tags.end(), flag) != Tags.end(); }

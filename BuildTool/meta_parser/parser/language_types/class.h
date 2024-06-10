@@ -57,5 +57,5 @@ public:
 
     bool isAccessible(void) const;
 
-
+	void TrySetClassTag(const class_tag& InTag);
 };
