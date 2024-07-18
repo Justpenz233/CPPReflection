@@ -13,7 +13,12 @@ if (CMAKE_HOST_WIN32)
 elseif(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
     set(PRECOMPILE_PRE_EXE)
 	set(PRECOMPILE_PARSER ${PRECOMPILE_TOOLS_PATH}/PiccoloParser)
-    set(sys_include "/usr/include/c++/9/") 
+    execute_process(
+            COMMAND gcc -dumpversion
+            OUTPUT_VARIABLE GCC_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(sys_include "/usr/include/c++/${GCC_VERSION}")
     #execute_process(COMMAND chmod a+x ${PRECOMPILE_PARSER} WORKING_DIRECTORY ${PRECOMPILE_TOOLS_PATH})
 elseif(CMAKE_HOST_APPLE)
     find_program(XCRUN_EXECUTABLE xcrun)
