@@ -13,12 +13,9 @@ if (CMAKE_HOST_WIN32)
 elseif(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
     set(PRECOMPILE_PRE_EXE)
 	set(PRECOMPILE_PARSER ${PRECOMPILE_TOOLS_PATH}/PiccoloParser)
-    execute_process(
-            COMMAND gcc -dumpversion
-            OUTPUT_VARIABLE GCC_VERSION
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    set(sys_include "/usr/include/c++/${GCC_VERSION}")
+    set(sys_include "${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}")
+    string(JOIN "," sys_include ${sys_include})
+    message(STATUS "sys_include: ${sys_include}")
     #execute_process(COMMAND chmod a+x ${PRECOMPILE_PARSER} WORKING_DIRECTORY ${PRECOMPILE_TOOLS_PATH})
 elseif(CMAKE_HOST_APPLE)
     find_program(XCRUN_EXECUTABLE xcrun)
@@ -38,23 +35,9 @@ elseif(CMAKE_HOST_APPLE)
 endif()
 
 set (PARSER_INPUT ${CMAKE_BINARY_DIR}/parser_header.h)
-### BUILDING ====================================================================================
 set(PRECOMPILE_TARGET "PiccoloPreCompile")
 
-# Called first time when building target
 add_custom_target(${PRECOMPILE_TARGET} ALL
-
-# COMMAND # (DEBUG: DON'T USE )
-#     this will make configure_file() is called on each compile
-#   ${CMAKE_COMMAND} -E touch ${PRECOMPILE_PARAM_IN_PATH}a
-
-# If more than one COMMAND is specified they will be executed in order...
-        COMMAND
-        ${CMAKE_COMMAND} -E echo "[Precompile] BEGIN "
-
         COMMAND
         ${PRECOMPILE_PARSER} "${PICCOLO_PRECOMPILE_PARAMS_PATH}" "${PARSER_INPUT}" ${INCLUDE_DIRS} ${sys_include} "MECHENGINE" 0 ${BUILD_TOOL_DIR} ${GENERATED_DIR}
-
-        COMMAND
-        ${CMAKE_COMMAND} -E echo "[Precompile] END "
 )

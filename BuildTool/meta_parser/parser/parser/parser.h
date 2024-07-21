@@ -49,7 +49,7 @@ private:
 
     std::vector<const char*>                    arguments = {{"-x",
                                            "c++",
-                                           "-std=c++17",
+                                           "-std=c++20",
                                            "-D__REFLECTION_PARSER__",
                                            "-DNDEBUG",
                                            "-D__clang__",

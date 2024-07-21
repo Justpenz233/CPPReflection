@@ -205,10 +205,14 @@ int MetaParser::parse(void)
     m_index                 = clang_createIndex(true, is_show_errors);
     std::string pre_include = "-I";
     std::string sys_include_temp;
+	auto sys_include_paths = Utils::split(m_sys_include, ",");
     if (!(m_sys_include == "*"))
     {
-        sys_include_temp = pre_include + m_sys_include;
-        arguments.emplace_back(sys_include_temp.c_str());
+    	for (auto& sys_include_path : sys_include_paths)
+		{
+			sys_include_path = pre_include + sys_include_path;
+			arguments.emplace_back(sys_include_path.c_str());
+		}
     }
 
     auto paths = m_work_paths;

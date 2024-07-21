@@ -18,12 +18,14 @@ int main(int argc, char* argv[])
     if (argv[1] != nullptr && argv[2] != nullptr && argv[3] != nullptr && argv[4] != nullptr && argv[5] != nullptr &&
         argv[6] != nullptr && argv[7] != nullptr && argv[8] != nullptr)
     {
+    	std::cout << "------------------------------------[BuildTool]------------------------------------" << std::endl;
         MetaParser::prepare();
         result = parse(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6], argv[7], argv[8]);
 
         auto duration_time = std::chrono::system_clock::now() - start_time;
         std::cout << "Completed in " << std::chrono::duration_cast<std::chrono::milliseconds>(duration_time).count()
                   << "ms" << std::endl;
+    	std::cout << "-----------------------------------------------------------------------------------" << std::endl;
         return result;
     }
     else
@@ -56,7 +58,6 @@ int parse(std::string project_input_file_name,
           std::string build_tool_dir,
           std::string out_dir)
 {
-    std::cout << std::endl;
     std::cout << "Parsing meta data for target \"" << module_name << "\"" << std::endl;
     std::fstream input_file;
 
