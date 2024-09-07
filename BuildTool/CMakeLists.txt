@@ -26,6 +26,12 @@ function(get_all_include_dirs target result_var)
     foreach(lib ${linked_libraries})
         # Skip if it's not a target
         if(TARGET ${lib})
+            # skip boost libraries due to recursive call
+            string(FIND "${lib}" "Boost" found_index)
+            if (found_index GREATER -1)
+#                message(STATUS "Skipping target alias: ${lib}")
+                continue()
+            endif()
             # Recursive call
             get_all_include_dirs(${lib} recursive_result)
             list(APPEND all_directories ${recursive_result})
