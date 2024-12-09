@@ -18,20 +18,11 @@ elseif(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" )
     message(STATUS "sys_include: ${sys_include}")
     #execute_process(COMMAND chmod a+x ${PRECOMPILE_PARSER} WORKING_DIRECTORY ${PRECOMPILE_TOOLS_PATH})
 elseif(CMAKE_HOST_APPLE)
-    find_program(XCRUN_EXECUTABLE xcrun)
-    if(NOT XCRUN_EXECUTABLE)
-      message(FATAL_ERROR "xcrun not found!!!")
-    endif()
-
-    execute_process(
-      COMMAND ${XCRUN_EXECUTABLE} --sdk macosx --show-sdk-platform-path
-      OUTPUT_VARIABLE osx_sdk_platform_path_test
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-
     set(PRECOMPILE_PRE_EXE)
-	set(PRECOMPILE_PARSER ${PRECOMPILE_TOOLS_PATH}/PiccoloParser)
-    set(sys_include "${osx_sdk_platform_path_test}/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1")
+    set(PRECOMPILE_PARSER ${PRECOMPILE_TOOLS_PATH}/PiccoloParser)
+    set(sys_include "${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}")
+    string(JOIN "," sys_include ${sys_include})
+    message(STATUS "sys_include: ${sys_include}")
 endif()
 
 set (PARSER_INPUT ${CMAKE_BINARY_DIR}/parser_header.h)
